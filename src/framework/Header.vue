@@ -1,7 +1,7 @@
 <template>
   <navbar>
     <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button" @click="mobileSidebarToggle">&#9776;</button>
-    <a class="navbar-brand" href="#">熊领巾后台系统</a>
+    <a class="navbar-brand" href="#">管理面板</a>
     <ul class="nav navbar-nav d-md-down-none">
       <li class="nav-item">
         <a class="nav-link navbar-toggler sidebar-toggler" href="#" @click="sidebarMinimize">&#9776;</a>
@@ -30,7 +30,7 @@ import navbar from './Navbar'
 import { dropdown } from 'vue-strap'
 
 export default {
-  name: 'header',
+  name: 'app-header',
   components: {
     navbar,
     dropdown

@@ -1,11 +1,11 @@
 <template>
   <footer class="app-footer">
-    基于 <a href="http://coreui.io">CoreUI</a> &copy; 2017 熊领巾
-    <span class="float-right"><a href="http://meathill.com/">Meathill</a> 维护</span>
+    21天学习 &copy; 2017~2018
+    <span class="float-right"><a href="http://meathill.com/">Meathill</a> 基于 <a href="http://coreui.io">CoreUI</a> 开发</span>
   </footer>
 </template>
 <script>
 export default {
-  name: 'footer'
+  name: 'app-footer'
 }
 </script>
