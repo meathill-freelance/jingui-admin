@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Model</title>
+
+  <link rel="stylesheet" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div id="app">
+  <button class="btn btn-primary" @click="open">Open</button>
+  <modal :title="modalTitle" v-model="modal" @ok="save" @cancel="close" effect="fade/zoom" :footer="false">
+    <template v-if="qrcodePath">
+      <p class="text-center">
+        <img :src="qrcodePath" class="img-thumbnail">
+      </p>
+      <p class="text-center">
+        <a :href="qrcodePath" :download="modalTitle + '.png'" class="btn btn-primary"><i class="fa fa-download"></i> 保存到本地</a>
+      </p>
+      <p>
+        若您的浏览器不支持直接下载，可以使用"右键 -> 图片另存为"来保存图片。
+      </p>
+    </template>
+    <template v-else>
+      <p class="text-center" v-if="!modalMessage">
+        <i class="fa fa-spin fa-spinner fa-4x"></i>
+      </p>
+      <p class="alert alert-danger" v-if="modalMessage">
+        {{modalMessage}}
+      </p>
+      <p class="text-center" v-else>
+        生成二维码，请稍候。
+      </p>
+    </template>
+  </modal>
+</div>
+
+<script src="../../../node_modules/vue/dist/vue.min.js"></script>
+</body>
+</html>
