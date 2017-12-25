@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { API } from 'config';
+import axios from 'axios';
 import _ from 'underscore';
 
 export default {
@@ -85,7 +85,7 @@ export default {
   methods: {
     fetch() {
       this.loading = true;
-      this.$http.get(`${API}product/${this.id}`)
+      axios.get(`product/${this.id}`)
         .then( response => {
           if (response.ok) {
             return response.json();
@@ -101,7 +101,7 @@ export default {
     },
     remove() {
       this.loading = true;
-      this.$http.delete(`${API}product/${this.id}`)
+      axios.delete(`product/${this.id}`)
         .then( response => {
           if (response.ok) {
             return response.json();

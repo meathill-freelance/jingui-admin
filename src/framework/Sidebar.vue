@@ -1,31 +1,26 @@
-<template>
-  <div class="sidebar">
-    <nav class="sidebar-nav">
-      <ul class="nav">
-        <li class="nav-item">
-          <router-link :to="'/dashboard'" class="nav-link"><i class="icon-speedometer"></i> 首页</router-link>
-        </li>
-        <router-link tag="li" class="nav-item nav-dropdown" :to="{ path: '/products'}" disabled>
-          <div class="nav-link nav-dropdown-toggle" @click="handleClick"><i class="icon-puzzle"></i> 商品管理</div>
-          <ul class="nav-dropdown-items">
-            <li class="nav-item">
-              <router-link :to="'/product/list'" class="nav-link" exact><i class="icon-puzzle"></i> 全部商品</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link :to="'/product/category'" class="nav-link" exact><i class="icon-puzzle"></i> 商品分类</router-link>
-            </li>
-          </ul>
-        </router-link>
-        <li class="nav-item">
-          <router-link :to="{ path: '/shelf/list'}" class="nav-link" exact><i class="icon-star"></i> 货架管理</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link :to="'/order'" class="nav-link" exact><i class="icon-calculator"></i> 订单管理</router-link>
-        </li>
-      </ul>
-    </nav>
-  </div>
+<template lang="pug">
+  .sidebar
+    nav.sidebar-nav
+      ul.nav
+        li.nav-item
+          router-link.nav-link(to="/dashboard")
+            i.icon-speedometer
+            | 首页
+        router-link.nav-item.nav-dropdown(
+          tag="li",
+          :to="{ path: '/products'}",
+          disabled
+        )
+          .nav-link.nav-dropdown-toggle(@click="handleClick")
+            i.icon-puzzle
+            | 作业管理
+          ul.nav-dropdown-items
+            li.nav-item
+              router-link.nav-link(:to="'/exercise/list'", exact)
+                i.icon-puzzle
+                | 全部作业
 </template>
+
 <script>
 
 export default {

@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
-import { API } from 'config';
 import router from './router';
 import base  from './store';
 import * as UserMutations from './store/user/mutation-types';
@@ -10,6 +9,7 @@ import * as MutationTypes from './store/mutation-types';
 let store = new Vuex.Store(base);
 let _status;
 
+/* global API */
 axios.defaults.baseURL = API;
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.withCredentials = true;
@@ -23,6 +23,7 @@ axios.interceptors.response.use(response => {
       }
     });
   }
+  return response;
 });
 
 

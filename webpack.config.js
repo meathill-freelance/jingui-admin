@@ -6,10 +6,7 @@
  */
 const path = require('path');
 const webpack = require('webpack');
-
-function resolve (dir) {
-  return path.join(__dirname, '..', dir)
-}
+const dev = require('./config/dev.env');
 
 module.exports = {
   entry: {
@@ -41,12 +38,12 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      config: path.resolve(__dirname, './config/dev.env.js'),
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   plugins: [
+    new webpack.DefinePlugin(dev),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: module => {

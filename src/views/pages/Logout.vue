@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import {API} from 'config';
+import axios from 'axios';
 import * as MutationTypes from '../../store/mutation-types';
 
 export default {
@@ -28,7 +28,7 @@ export default {
     }
   },
   created() {
-    this.$http.post(API + 'logout')
+    axios.post('logout')
       .then(response => {
         if (response.ok) {
           return response.json();

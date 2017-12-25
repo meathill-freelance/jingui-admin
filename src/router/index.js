@@ -3,16 +3,9 @@ import Router from 'vue-router';
 
 import Full from '../containers/Full.vue';
 import Dashboard from '../views/Dashboard.vue';
-import ProductList from '../views/product/list.vue';
-import EditProduct from '../views/product/edit.vue';
-import ProductDetail from '../views/product/detail.vue';
-import Category from '../views/product/category.vue';
-import ShelfList from '../views/shelf/list.vue';
-import EditShelf from '../views/shelf/edit.vue';
-import ShelfDetail from '../views/shelf/detail.vue';
-import AdjustShelf from '../views/shelf/adjust.vue';
-import OrderList from '../views/order/list.vue';
-import OrderDetail from '../views/order/detail.vue';
+import ExerciseList from '@/module/exercise/container/list.vue';
+import EditExercise from '@/module/exercise/container/edit.vue';
+import ExerciseDetail from '@/module/exercise/container/detail.vue';
 import Login from '../views/pages/Login.vue';
 import Logout from '../views/pages/Logout.vue';
 import Page404 from '../views/pages/Page404.vue';
@@ -37,9 +30,9 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: 'product',
-          name: '商品管理',
-          redirect: 'product/list',
+          path: 'exercise',
+          name: '作业管理',
+          redirect: 'exercise/list',
           component: {
             render(createElement) {
               return createElement('router-view');
@@ -48,91 +41,27 @@ export default new Router({
           children: [
             {
               path: 'list',
-              name: '商品列表',
-              component: ProductList
+              name: '作业列表',
+              component: ExerciseList,
             },
             {
               path: 'new',
-              name: '添加新商品',
-              component: EditProduct
-            },
-            {
-              path: 'category',
-              name: '商品分类',
-              component: Category
+              name: '添加新作业',
+              component: EditExercise,
             },
             {
               path: ':id',
-              name: '商品详情',
-              component: ProductDetail,
+              name: '作业详情',
+              component: ExerciseDetail,
             },
             {
               path: ':id/edit',
-              name: '编辑商品',
-              component: EditProduct
-            }
-          ]
+              name: '编辑作业',
+              component: EditExercise,
+            },
+          ],
         },
-        {
-          path: 'shelf',
-          redirect: 'shelf/list',
-          name: '货架管理',
-          component: {
-            render (createElement) {
-              return createElement('router-view');
-            }
-          },
-          children: [
-            {
-              path: 'list',
-              name: '货架列表',
-              component: ShelfList
-            },
-            {
-              path: 'new',
-              name: '添加货架',
-              component: EditShelf
-            },
-            {
-              path: ':id',
-              name: '货架详情',
-              component: ShelfDetail,
-            },
-            {
-              path: ':id/edit',
-              name: '编辑货架',
-              component: EditShelf
-            },
-            {
-              path: ':id/adjust',
-              name: '商品上架',
-              component: AdjustShelf
-            }
-          ]
-        },
-        {
-          path: 'order',
-          name: '订单管理',
-          redirect: 'order/list',
-          component: {
-            render(createElement) {
-              return createElement('router-view');
-            }
-          },
-          children: [
-            {
-              path: 'list',
-              name: '全部订单',
-              component: OrderList
-            },
-            {
-              path: ':id',
-              name: '订单详情',
-              component: OrderDetail
-            }
-          ]
-        }
-      ]
+      ],
     },
     {
       path: '/error',

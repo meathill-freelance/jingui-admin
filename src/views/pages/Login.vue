@@ -5,7 +5,7 @@
         <form @submit.prevent="login" class="col-md-8">
           <div class="card p-4">
             <div class="card-block">
-              <h1>熊领巾管理系统</h1>
+              <h1>21天学习 管理系统</h1>
               <p class="text-muted">欢迎使用，祝您一天好心情。</p>
               <p class="alert alert-danger" v-if="errorMessage" v-text="errorMessage"></p>
               <div class="input-group mb-3">
@@ -28,11 +28,9 @@
 </template>
 
 <script>
-import {API} from 'config';
-import _ from 'underscore';
+import axios from 'axios';
 import * as MutationTypes from '../../store/user/mutation-types';
 import * as StoreMutationsTypes from '../../store/mutation-types';
-import * as ActionTypes from '../../store/action-types';
 
 export default {
   name: 'Login',
@@ -49,7 +47,7 @@ export default {
       alert('登录已失效，请重新登录。');
       this.loading = true;
       this.redirectTo = this.$route.params.redirectTo;
-      this.$http.get(API + 'login')
+      axios.get('login')
         .then(response => {
           if (response.ok) {
             alert('您已处于登录状态');
@@ -70,15 +68,10 @@ export default {
       let elements = event.target.elements;
       data.append('name', elements.name.value);
       data.append('password', elements.password.value);
-      this.$http.post(API + 'login', data)
+      axios.post('login', data)
         .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error(response.statusText);
-        })
-        .then(json => {
-          this.$store.commit(MutationTypes.SET_USER_INFO, json.user);
+          let {data} = response;
+          this.$store.commit(MutationTypes.SET_USER_INFO, data.user);
           this.$router.push({
             path: this.redirectTo || '/'
           });
