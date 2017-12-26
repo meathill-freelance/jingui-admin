@@ -12,3 +12,6 @@ static/css/screen.*
 
 # from coreui
 scss
+
+# temp
+libs/vue-strap

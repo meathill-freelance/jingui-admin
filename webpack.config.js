@@ -25,10 +25,14 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.vue/,
-        loader: 'vue-loader'
-      }
-    ]
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
+        test: /\.styl$/,
+        loader: 'style-loader!css-loader!stylus-loader',
+      },
+    ],
   },
   watch: true,
   watchOptions: {
@@ -40,6 +44,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': path.resolve(__dirname, './src'),
+      'styl': path.resolve(__dirname, './styl'),
     },
   },
   plugins: [

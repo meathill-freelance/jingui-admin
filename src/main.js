@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import axios from 'axios';
 import router from './router';
 import base  from './store';
+import 'styl/screen.styl';
 import * as UserMutations from './store/user/mutation-types';
 import * as MutationTypes from './store/mutation-types';
 
