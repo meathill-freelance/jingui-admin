@@ -19,12 +19,13 @@
           maxlength="100"
         )
     .form-group.row
-      <label class="col-md-2 form-control-label" for="published_time">上线日期</label>
+      label.col-md-2.form-control-label(for="published_time") 上线日期
       .col-md-6
-        p.form-control-static(v-if="published") {{exercise.published_time}}
-        input#published_time.form-control(
+        p.form-control-static(v-if="published") {{exercise.published_at}}
+        datepicker#published_time(
           v-else
-          v-model="exercise.published_time"
+          v-model="exercise.published_at"
+          format="yyyy-MM-dd",
           name="published_time"
           placeholder="上线日期"
         )
@@ -77,6 +78,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 import SelectQuestion from '@/components/SelectQuestion.vue';
+import Datepicker from '@/components/Datepicker.vue';
 
 /* global API */
 
@@ -84,6 +86,7 @@ const tomorrow = parseInt(moment().add(1, 'days').format('X'));
 
 export default {
   components: {
+    Datepicker,
     SelectQuestion,
   },
 

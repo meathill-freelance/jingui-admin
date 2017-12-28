@@ -2,6 +2,7 @@
   <div class="datepicker">
     <input class="form-control datepicker-input" type="text"
       v-model="val"
+      :id="id"
       :class="{'with-reset-button': clearButton}"
       :name="name"
       :placeholder="placeholder"
@@ -76,6 +77,7 @@
 export default {
   name: 'datepicker',
   props: {
+    id: {type: String},
     value: {type: String},
     format: {default: 'MM/dd/yyyy'},
     disabled: {type: Boolean, default: false},
