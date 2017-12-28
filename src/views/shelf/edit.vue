@@ -79,7 +79,7 @@
 </template>
 
 <script>
-  import _ from 'underscore';
+  import _ from 'lodash';
 
   const DICT = {
     corp: '公司名称',

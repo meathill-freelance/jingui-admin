@@ -48,7 +48,7 @@
 
 <script>
 import { API } from 'config';
-import _ from 'underscore';
+import _ from 'lodash';
 
 export default {
   data() {

@@ -2,7 +2,7 @@
  * Created by Meathill on 2017/5/17.
  */
 
-import _ from 'underscore';
+import _ from 'lodash';
 import * as types from './mutation-types';
 
 export default {

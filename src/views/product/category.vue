@@ -46,7 +46,7 @@
 </template>
 
 <script>
-  import _ from 'underscore';
+  import _ from 'lodash';
   import { API } from 'config';
   import Modal from '../../components/Modal.vue';
   import STATUS from '../../components/ModalStatus';

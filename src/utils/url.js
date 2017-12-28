@@ -2,7 +2,7 @@
  * Created by meathill on 2017/5/31.
  */
 
-import _ from 'underscore';
+import _ from 'lodash';
 
 export function buildParam(obj) {
   let result = [];
