@@ -21,7 +21,7 @@
     .form-group.row
       label.col-md-2.form-control-label(for="published_time") 上线日期
       .col-md-6
-        p.form-control-static(v-if="published") {{exercise.published_at}}
+        p.form-control-static(v-if="id") {{exercise.published_at | toDate}}
         datepicker#published_time(
           v-else
           v-model="exercise.published_at"
@@ -32,9 +32,14 @@
     .form-group.row
       <label class="col-md-2 form-control-label" for="type">作业类型</label>
       .col-md-6
-        select#type.form-control(name="category", v-model.number="exercise.type")
+        p.form-control-static(v-if="id") {{ exercise.type | toType }}
+        select#type.form-control(
+          v-else,
+          name="category",
+          v-model.number="exercise.type",
+        )
           option(value="0") 听力练习
-          option(value="1") 阅读联系
+          option(value="1") 阅读练习
 
     hr
     template(v-if="exercise.type === 0")
@@ -73,12 +78,13 @@
 </template>
 
 <script>
-import {mapObject, isString} from 'lodash';
+import {assign} from 'lodash';
 import axios from 'axios';
 import moment from 'moment';
 
 import SelectQuestion from '@/components/SelectQuestion.vue';
 import Datepicker from '@/components/Datepicker.vue';
+import {mixin} from "@/mixin/exercise";
 
 /* global API */
 
@@ -89,6 +95,7 @@ export default {
     Datepicker,
     SelectQuestion,
   },
+  mixins: [mixin],
 
   data() {
     return {
@@ -98,7 +105,7 @@ export default {
         type: 0,
       },
       extraData: {
-        audio: '',
+        audio: 'http://localhost:8000/storage/audio/gF4zlHY6dmrfURZqAZnizPR7PAPXKh56TkRZWfiq.mp3',
         questions: null,
         article: '',
       },
@@ -127,9 +134,10 @@ export default {
         .then( json => {
           this.loading = false;
           this.exercise = json.exercise;
+          this.extraData = json.extra;
         })
         .catch( err => {
-          alert('加载商品属性失败。' + err);
+          alert('加载作业失败。' + err);
         });
     },
     onSelectFile(event) {
@@ -165,43 +173,31 @@ export default {
       event.target.classList.remove('flash');
     },
     save() {
-      if (!this.product.thumbnail) {
-        alert('请上传商品图片。');
+      if (this.exercise.type === 0 && !this.extraData.audio) {
+        alert('请上传听力资料。');
         this.$el.querySelector('[for=file-input]').classList.add('flash');
         return;
       }
       this.loading = true;
-      let api = 'product';
+      let api = 'exercise';
       let method = this.id ? 'patch' : 'post';
       if (this.id) {
         api += '/' + this.id;
       }
-      axios[method](api, this.product)
-        .then( response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error(response.statusText);
-        })
+      const data = assign({}, this.exercise, this.extraData);
+      axios[method](api, data)
         .then( json => {
-          if (json.code === 0) {
-            if (!this.id) {
-              mapObject(this.product, value => {
-                return isString(value) ? '' : 0;
-              });
-            }
-            this.message = '保存成功';
-            this.status = 'success';
-            setTimeout( () => {
-              this.$router.push({
-                name: '商品管理'
-              })
-            }, 2500);
-          } else {
-            this.message = '保存失败。' + json.msg;
-            this.status = 'danger';
+          if (json.code !== 0) {
+            throw new Error('保存失败。' + json.msg);
           }
-          this.loading = false;
+
+          this.message = '保存成功';
+          this.status = 'success';
+          setTimeout( () => {
+            this.$router.push({
+              name: '作业管理'
+            })
+          }, 2500);
         })
         .catch( err => {
           if (err.status === 422) { // 提交数据有误，表单验证不通过
@@ -216,6 +212,8 @@ export default {
           }
           this.message = err;
           this.status = 'danger';
+        })
+        .then(() => {
           this.loading = false;
         });
     }

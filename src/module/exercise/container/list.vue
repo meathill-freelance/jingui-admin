@@ -22,18 +22,32 @@
           tr
             th 作业标题
             th 作业类型
-            th 完成日期
+            th 上线日期
             th 操作
         tbody
-          tr(v-for="(item, index) in list", :key="item.id")
-            td {{item.fullname}}
-            td {{item.pcode}}
-            td {{item.left}}
+          tr(v-for="item in list", :key="item.id")
+            td {{item.title}}
+            td {{item.type | toType}}
+            td {{item.published_at | toDate}}
             td
-              a.btn.btn-outline-primary(:href="'#/product/' + item.id + '/edit'")
-                i.fa.fa-edit 修改
-              a.btn.btn-info(:href="'#/product/' + item.id")
-                i.fa.fa-info-circle 详情
+              .btn-group(role="group")
+                a.btn.btn-outline-primary(:href="'#/exercise/' + item.id + '/edit'")
+                  i.fa.fa-edit
+                  | 修改
+                button.btn.btn-info(
+                  type="button",
+                  disabled,
+                  :href="'#/exercise/' + item.id",
+                )
+                  i.fa.fa-info-circle
+                  | 详情
+                spin-button(
+                  type="button",
+                  icon="fa-trash",
+                  buttonClass="btn-danger",
+                  :saving="item.saving",
+                  @click.native="remove(item)",
+                ) 删除
 
       pagination(:total="total", :per-page="20", @change="turnToPage")
 </template>
@@ -41,12 +55,16 @@
 <script>
   import axios from 'axios';
   import pagination from '@/components/Pagination.vue';
+  import SpinButton from '@/components/form/SpinButton.vue';
+  import {mixin} from '@/mixin/exercise';
 
   export default {
     name: 'exercise-list',
     components: {
-      pagination
+      pagination,
+      SpinButton,
     },
+    mixins: [mixin],
     data() {
       return {
         error: '',
@@ -58,17 +76,11 @@
     },
     methods: {
       changeCategory(event) {
-        this.filter.category = event.target.value;
+        this.filter.type = event.target.value;
         this.fetch();
       },
       fetch() {
         return axios.get('exercise', {params: this.filter})
-          .then(response => {
-            if (!response.ok) {
-              throw new Error(response.statusText);
-            }
-            return response.json();
-          })
           .then(response => {
             this.list = response.list;
             this.total = response.total;
@@ -81,6 +93,21 @@
       turnToPage(page) {
         this.filter.page = page;
         this.fetch();
+      },
+      remove(item) {
+        item.saving = true;
+        axios.delete('exercise/' + item.id)
+          .then(response => {
+            if (response.code !== 0) {
+              throw new Error(response.msg);
+            }
+          })
+          .catch(err => {
+            err.message && alert(err.message);
+          })
+          .then(() => {
+            item.saving = false;
+          });
       },
     },
 

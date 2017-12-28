@@ -1,6 +1,6 @@
 <template lang="pug">
-  div.select-question-field
-    div.card(v-for="(item, index) in localValue")
+  div.select-question-field(@change="onChange")
+    div.card(v-for="(item, index) in localValue", :class="item.newOption ? 'new-option' : ''")
       h4 题目-{{index + 1}}
       .form-group
         input.form-control(
@@ -21,7 +21,10 @@
                 )
                 span 正确
           .col-10
-            input.form-control(v-model="item.options[index]")
+            input.form-control.option(
+              v-model="item.options[index]",
+              @keydown.enter.prevent="addOption(item)",
+            )
       .row.mt-3
         .offset-2.col-10
           button.btn.btn-secondary(type="button", @click="addOption(item)")
@@ -35,6 +38,8 @@
 
 <script>
   import {uniqueId} from 'lodash';
+
+  const pop = Array.prototype.pop;
 
   export default {
     props: {
@@ -66,6 +71,12 @@
 
       addOption(item) {
         item.options.push('');
+        item.newOption = true;
+        this.$nextTick()
+          .then(() => {
+            let options = this.$el.querySelector('.new-option').querySelectorAll('.option');
+            options[options.length - 1].focus();
+          });
       },
 
       processValue() {
@@ -74,11 +85,21 @@
           this.add();
         }
       },
+
+      onChange() {
+        this.$emit('input', this.localValue);
+      },
     },
 
     beforeMount() {
       this.processValue();
-    }
+    },
+
+    watch: {
+      value() {
+        this.processValue();
+      },
+    },
   }
 </script>
 
