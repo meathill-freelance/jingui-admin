@@ -69,8 +69,7 @@ export default {
       data.append('name', elements.name.value);
       data.append('password', elements.password.value);
       axios.post('login', data)
-        .then(response => {
-          let {data} = response;
+        .then(data => {
           this.$store.commit(MutationTypes.SET_USER_INFO, data.user);
           this.$router.push({
             path: this.redirectTo || '/'
