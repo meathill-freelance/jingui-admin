@@ -1,13 +1,23 @@
 <template lang="pug">
 .bg-white.px-3.pt-3.pb-1.exercise-editor
-  <form :action="API + 'product/'" method="post" enctype="multipart/form-data" class="form-horizontal" @submit.prevent="save">
+  form.form-horizontal(
+    :action="API + 'product/'",
+    method="post",
+    enctype="multipart/form-data",
+    @submit.prevent="save"
+  )
     h3.mb-4 基础信息
-    <div class="form-group row">
-      <label class="col-md-2 form-control-label" for="title">作业标题</label>
-      <div class="col-md-6">
-        <input id="title" name="title" class="form-control" placeholder="作业标题" v-model="exercise.title" required maxlength="100">
-      </div>
-    </div>
+    .form-group.row
+      label.col-md-2.form-control-label(for="title") 作业标题
+      .col-md-6
+        input.form-control(
+          id="title",
+          name="title",
+          placeholder="作业标题",
+          v-model="exercise.title",
+          required,
+          maxlength="100"
+        )
     .form-group.row
       <label class="col-md-2 form-control-label" for="published_time">上线日期</label>
       .col-md-6
@@ -24,12 +34,14 @@
         select#type.form-control(name="category", v-model.number="exercise.type")
           option(value="0") 听力练习
           option(value="1") 阅读联系
+
     hr
     template(v-if="exercise.type === 0")
       .form-group.uploader.row
         label.col-md-2.form-control-label(for="file-input") 上传音频
         .col-md-6
-          input#file-input(type="file", @change="onSelectFile", accept="image/*")
+          audio.mb-3(v-if="extraData.audio", :src="extraData.audio", controls)
+          input#file-input(type="file", @change="onSelectFile", accept="audio/*")
           label.btn.btn-outline-primary.btn-block.animated(
             for="file-input",
             @animationend="removeFlash"
@@ -37,27 +49,26 @@
             i.fa.fa-file-audio-o
             | 上传音频
           p.alert.alert-danger(v-if="thumbnailError") {{thumbnailError}}
-          p.help-block.text-center 支持 mp3 格式，文件不大于 1M
+          p.help-block.text-center 目前支持 mp3 格式
       .form-group.row
         label.col-md-2.form-control-label 问题
-
+        .col-md-8
+          select-question(v-model="extraData.questions")
     template(v-else)
       .form-group.row
         label.col-md-2.form-control-label(for="article") 阅读文字
         .col-md-6
           textarea#article.form-control(v-model="extraData.article" rows="6")
+
+    hr
     .alert.offset-2(:class="'alert-' + status", v-if="message") {{message}}
-    <div class="form-group row">
-      <div class="col-sm-10 offset-2">
-        <button class="btn btn-primary" :disabled="preventSubmit">
-          <i class="fa fa-spin fa-spinner" v-if="loading"></i>
-          <i class="fa fa-check" v-else></i>
+    .form-group.row
+      .col-sm-10.offset-2
+        button.btn.btn-primary(:disabled="preventSubmit")
+          i.fa.fa-spin.fa-spinner(v-if="loading")
+          i.fa.fa-check(v-else)
           | 保存
-        </button>
-        <a class="btn btn-link" href="#/product/">取消</a>
-      </div>
-    </div>
-  </form>
+        a.btn.btn-link(href="#/exercise/") 取消
 </template>
 
 <script>
@@ -65,11 +76,17 @@ import {mapObject, isString} from 'lodash';
 import axios from 'axios';
 import moment from 'moment';
 
+import SelectQuestion from '@/components/SelectQuestion.vue';
+
 /* global API */
 
 const tomorrow = parseInt(moment().add(1, 'days').format('X'));
 
 export default {
+  components: {
+    SelectQuestion,
+  },
+
   data() {
     return {
       exercise: {
@@ -78,7 +95,9 @@ export default {
         type: 0,
       },
       extraData: {
-
+        audio: '',
+        questions: null,
+        article: '',
       },
 
       API: API,
@@ -99,12 +118,6 @@ export default {
       return this.id && this.exercise.published_at < tomorrow;
     },
   },
-  created() {
-    if (this.id) {
-      this.loading = true;
-      return this.fetch();
-    }
-  },
   methods: {
     fetch() {
       return axios.get(`exercise/${this.id}`)
@@ -118,29 +131,27 @@ export default {
     },
     onSelectFile(event) {
       let file = event.target.files[0];
-      if (!/\.(png|jpg|jpeg)$/i.test(file.name)) {
-        alert('只能上传 *.jpg，*.png 格式的图片。');
+      if (!/\.mp3$/i.test(file.name)) {
+        alert('只能上传 *.mp3 格式的图片。');
+        event.target.value = '';
         return;
       }
-      if (file.size > 1024 * 1024) {
+      if (file.size > 5 * 1024 * 1024) {
         alert('只能上传不大于 1M 的图片。');
+        event.target.value = '';
         return;
       }
       let form = new FormData();
       form.append('file', file);
-      this.$http.post(this.API + 'file', form)
-        .then( response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error(response.statusText);
-        })
+      axios.post('file', form)
         .then( json => {
           this.thumbnailError = '';
-          this.product.thumbnail = json.path;
+          this.extraData.audio = json.path;
         })
         .catch( err => {
-          if (err.status === 422) {
+          if (err.response && err.response.data) {
+            err = err.response.data.message;
+          } else if (err.status === 422) {
             err = JSON.stringify(err.body);
           }
           this.thumbnailError = err;
@@ -204,6 +215,12 @@ export default {
           this.status = 'danger';
           this.loading = false;
         });
+    }
+  },
+  beforeMount() {
+    if (this.id) {
+      this.loading = true;
+      return this.fetch();
     }
   },
   watch: {
