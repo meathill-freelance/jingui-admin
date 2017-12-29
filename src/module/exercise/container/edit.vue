@@ -105,7 +105,7 @@ export default {
         type: 0,
       },
       extraData: {
-        audio: 'http://localhost:8000/storage/audio/gF4zlHY6dmrfURZqAZnizPR7PAPXKh56TkRZWfiq.mp3',
+        audio: '',
         questions: null,
         article: '',
       },
