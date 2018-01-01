@@ -9,6 +9,9 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 const config = require('./webpack.config');
 
+const env = process.env.NODE_ENV || 'development';
+const isProd = env === 'production';
+
 //config.devtool = false;
 config.resolve.alias.config = path.resolve(__dirname, './config/prod.env.js');
 config.plugins = config.plugins.concat([
@@ -59,5 +62,14 @@ config.devServer = {
   compress: true,
   port: 9002,
 };
+
+if (isProd) {
+  config.plugins.push(
+    new UglifyJSPlugin({
+      exclude: /^vendor.js$/,
+    })
+  );
+  config.devtool = false;
+}
 
 module.exports = config;

@@ -73,10 +73,7 @@
       fetch() {
         return axios.get('season', {params: this.filter})
           .then(response => {
-            this.list = (response.list || []).map(item => {
-              item.end_at = moment(item.start_at).add(item.duration, 'days').format(format.DATE);
-              return item;
-            });
+            this.list = response.list[];
             this.total = response.total;
           });
       },

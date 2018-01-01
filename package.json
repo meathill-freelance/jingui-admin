@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "webpack-dev-server --hot --host=localhost --config webpack.config.prod.js",
     "start": "node build/dev-server.js",
-    "build": "gulp",
+    "build": "cross-env NODE_ENV=production webpack --config webapck.config.prod.js --progress",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
