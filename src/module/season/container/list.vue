@@ -1,16 +1,10 @@
 <template lang="pug">
   .animated.fadeIn
     nav.navbar.navbar-toggleable-md.navbar-light.bg-faded
-      <form class="form-inline mr-auto mt-2 mt-lg-0">
-        <a class="btn btn-outline-primary mr-sm-2 my-sm-0" href="#/exercise/new">
-          <i class="fa fa-plus"></i>
-          | 新增作业
-        </a>
-      </form>
-      <form class="form-inline my-lg-0" @submit.prevent="search">
-        input.form-control.mr-sm-2(type="search", name="query", placeholder="作业名称")
-        button.btn.btn-outline-success.my-2.my-sm-0 搜索
-      </form>
+      form.form-inline.mr-auto.mt-2.mt-lg-0
+        a.btn.btn-outline-primary.mr-sm-2.my-sm-0(href="#/season/new")
+          i.fa.fa-plus
+          | 新增学期
 
     .bg-white.px-3.pt-3.pb-1
       <div class="alert alert-danger" v-if="error">
@@ -20,27 +14,22 @@
       table.table.table-bordered
         thead
           tr
-            th 作业标题
-            th 作业类型
-            th 上线日期
+            th 学习名称
+            th 开始时间
+            th 结束时间
+            th 持续时间
             th 操作
         tbody
           tr(v-for="item in list", :key="item.id")
             td {{item.title}}
-            td {{item.type | toType}}
-            td {{item.published_at | toDate}}
+            td {{item.start_at | toDate}}
+            td {{item.end_at | toDate}}
+            td {{item.duration}}天
             td
               .btn-group(role="group")
-                a.btn.btn-outline-primary(:href="'#/exercise/' + item.id + '/edit'")
+                router-link.btn.btn-outline-primary(:to="{name: 'season.edit', params: {id: item.id}}", )
                   i.fa.fa-edit
                   | 修改
-                button.btn.btn-info(
-                  type="button",
-                  disabled,
-                  :href="'#/exercise/' + item.id",
-                )
-                  i.fa.fa-info-circle
-                  | 详情
                 spin-button(
                   type="button",
                   icon="fa-trash",
@@ -54,18 +43,19 @@
 
 <script>
   import axios from 'axios';
+  import moment from 'moment';
+
   import pagination from 'src/components/Pagination.vue';
   import SpinButton from 'src/components/form/SpinButton.vue';
-  import baseMixin from 'src/mixin/base';
-  import exerciseMixin from 'src/mixin/exercise';
+  import base from 'src/mixin/base';
+  import * as format from 'src/data/format';
 
   export default {
     components: {
       pagination,
       SpinButton,
     },
-    mixins: [baseMixin, exerciseMixin
-    ],
+    mixins: [base],
     data() {
       return {
         error: '',
@@ -81,9 +71,12 @@
         this.fetch();
       },
       fetch() {
-        return axios.get('exercise', {params: this.filter})
+        return axios.get('season', {params: this.filter})
           .then(response => {
-            this.list = response.list;
+            this.list = (response.list || []).map(item => {
+              item.end_at = moment(item.start_at).add(item.duration, 'days').format(format.DATE);
+              return item;
+            });
             this.total = response.total;
           });
       },
@@ -97,7 +90,7 @@
       },
       remove(item) {
         item.saving = true;
-        axios.delete('exercise/' + item.id)
+        axios.delete('season/' + item.id)
           .then(response => {
             if (response.code !== 0) {
               throw new Error(response.msg);

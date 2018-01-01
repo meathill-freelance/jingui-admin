@@ -7,7 +7,7 @@
         <breadcrumb :list="list"/>
         <div class="container-fluid">
           <router-view>
-            欢迎使用熊领巾后台系统
+            欢迎使用21天练习后台系统
           </router-view>
         </div>
       </main>

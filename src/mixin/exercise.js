@@ -1,10 +1,7 @@
-import {type} from '@/data/exercise';
+import {type} from 'src/data/exercise';
 
-export const mixin = {
+export default {
   filters: {
-    toDate(time) {
-      return time.substr(0, 10);
-    },
     toType(key) {
       return type[key];
     },

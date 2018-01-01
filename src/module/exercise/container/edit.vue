@@ -1,7 +1,7 @@
 <template lang="pug">
 .bg-white.px-3.pt-3.pb-1.exercise-editor
   form.form-horizontal(
-    :action="API + 'product/'",
+    :action="API + 'exercise/'",
     method="post",
     enctype="multipart/form-data",
     @submit.prevent="save"
@@ -18,6 +18,17 @@
           required,
           maxlength="100"
         )
+    .form-group.row
+      label.col-md-2.form-control-label(for="season") 学期
+      .col-md-6
+        select.form-control(
+          id="season",
+          name="season_id",
+          v-model="exercise.season_id",
+          required,
+        )
+          option(value='', disabled) 请选择
+          option(v-for="item in seasons", :value="item.id") {{item.title}} ({{item.start_at}} ~ {{item.end_at}})
     .form-group.row
       label.col-md-2.form-control-label(for="published_time") 上线日期
       .col-md-6
@@ -82,9 +93,10 @@ import {assign} from 'lodash';
 import axios from 'axios';
 import moment from 'moment';
 
-import SelectQuestion from '@/components/SelectQuestion.vue';
-import Datepicker from '@/components/Datepicker.vue';
-import {mixin} from "@/mixin/exercise";
+import SelectQuestion from 'src/components/SelectQuestion.vue';
+import Datepicker from 'src/components/Datepicker.vue';
+import baseMixin from 'src/mixin/base';
+import exerciseMixin from "src/mixin/exercise";
 
 /* global API */
 
@@ -95,7 +107,7 @@ export default {
     Datepicker,
     SelectQuestion,
   },
-  mixins: [mixin],
+  mixins: [baseMixin, exerciseMixin],
 
   data() {
     return {

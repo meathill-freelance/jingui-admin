@@ -39,8 +39,6 @@
 <script>
   import {uniqueId} from 'lodash';
 
-  const pop = Array.prototype.pop;
-
   export default {
     props: {
       value: {

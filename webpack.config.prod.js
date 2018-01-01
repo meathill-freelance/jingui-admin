@@ -3,20 +3,15 @@
  */
 
 const path = require('path');
-const {find} = require('lodash');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 const config = require('./webpack.config');
 
-config.devtool = false;
-config.watch = false;
+//config.devtool = false;
 config.resolve.alias.config = path.resolve(__dirname, './config/prod.env.js');
 config.plugins = config.plugins.concat([
-  new UglifyJSPlugin({
-    exclude: /^vendor.js$/
-  }),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify('production')
@@ -30,7 +25,7 @@ config.plugins = config.plugins.concat([
     allChunks: true,
   }),
 ]);
-config.module.loaders = config.module.loaders.slice(0, 1).concat([
+config.module.loaders = config.module.loaders.slice(0, 2).concat([
   {
     test: /\.styl$/,
     use: ExtractTextPlugin.extract({
@@ -51,6 +46,18 @@ config.module.loaders = config.module.loaders.slice(0, 1).concat([
       },
     },
   },
+  {
+    test: /\.css$/,
+    use: ExtractTextPlugin.extract({
+      use: 'css-loader',
+      fallback: 'style-loader',
+    }),
+  },
 ]);
+config.devServer = {
+  contentBase: path.join(__dirname, "dist"),
+  compress: true,
+  port: 9002,
+};
 
 module.exports = config;

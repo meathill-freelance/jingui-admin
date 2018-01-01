@@ -8,7 +8,7 @@
             | 首页
         router-link.nav-item.nav-dropdown(
           tag="li",
-          :to="{ path: '/products'}",
+          :to="{ path: '/exercise'}",
           disabled
         )
           .nav-link.nav-dropdown-toggle(@click="handleClick")
@@ -19,6 +19,19 @@
               router-link.nav-link(:to="'/exercise/list'", exact)
                 i.icon-puzzle
                 | 全部作业
+        router-link.nav-item.nav-dropdown(
+          tag="li",
+          :to="{ path: '/season'}",
+          disabled
+        )
+          .nav-link.nav-dropdown-toggle(@click="handleClick")
+            i.icon-puzzle
+            | 学期管理
+          ul.nav-dropdown-items
+            li.nav-item
+              router-link.nav-link(:to="'/season/list'", exact)
+                i.icon-puzzle
+                | 全部学期
 </template>
 
 <script>

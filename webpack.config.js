@@ -25,6 +25,14 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
+        test: /\.(png|jpg|gif|svg|woff2|eot|woff|ttf|ico)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'assets/[name].[hash].[ext]'
+        },
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
       },
@@ -32,18 +40,17 @@ module.exports = {
         test: /\.styl$/,
         loader: 'style-loader!css-loader!stylus-loader',
       },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
+      },
     ],
-  },
-  watch: true,
-  watchOptions: {
-    ignored: /node_modules|dist|build|docs|css/,
-    poll: 1000
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': path.resolve(__dirname, './src'),
+      'src': path.resolve(__dirname, './src'),
       'styl': path.resolve(__dirname, './styl'),
     },
   },
