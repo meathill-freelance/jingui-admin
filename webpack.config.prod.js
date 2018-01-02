@@ -8,18 +8,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 const config = require('./webpack.config');
+const production = require('./config/prod.env');
 
 const env = process.env.NODE_ENV || 'development';
-const isProd = env === 'production';
+const isProd = true;//env === 'production';
 
-//config.devtool = false;
-config.resolve.alias.config = path.resolve(__dirname, './config/prod.env.js');
-config.plugins = config.plugins.concat([
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify('production')
-    }
-  }),
+config.devtool = 'source-map';
+config.plugins = config.plugins.slice(1).concat([
+  new webpack.DefinePlugin(production),
   new HtmlWebpackPlugin({
     template: 'index.template.html',
   }),
@@ -67,7 +63,7 @@ if (isProd) {
   config.plugins.push(
     new UglifyJSPlugin({
       exclude: /^vendor.js$/,
-    })
+    }),
   );
   config.devtool = false;
 }
