@@ -20,17 +20,6 @@
           maxlength="100"
         )
     .form-group.row
-      label.col-md-2.form-control-label(for="season") 学期
-      .col-md-6
-        select.form-control(
-          id="season",
-          name="season_id",
-          v-model="exercise.season_id",
-          required,
-        )
-          option(value='', disabled) 请选择
-          option(v-for="item in season", :value="item.id") {{item.title}} ({{item.start_at | toDate}} ~ {{item.end_at | toDate}})
-    .form-group.row
       label.col-md-2.form-control-label(for="published_time") 上线日期
       .col-md-6
         p.form-control-static(v-if="published") {{exercise.published_at | toDate}}
@@ -50,33 +39,54 @@
           name="category",
           v-model.number="exercise.type",
         )
-          option(value="0") 听力练习
-          option(value="1") 阅读练习
+          option(value="0") 听力练习（选择题）
+          option(value="1") 口语练习
+          option(value="2") 听力练习（填空题）
 
     hr
+    uploader.form-group(v-model="extraData.audio")
     template(v-if="exercise.type === 0")
-      .form-group.uploader.row
-        label.col-md-2.form-control-label(for="file-input") 上传音频
-        .col-md-6
-          audio.mb-3(v-if="extraData.audio", :src="extraData.audio", controls)
-          input#file-input(type="file", @change="onSelectFile", accept="audio/*")
-          label.btn.btn-outline-primary.btn-block.animated(
-            for="file-input",
-            @animationend="removeFlash"
-          )
-            i.fa.fa-file-audio-o
-            | 上传音频
-          p.alert.alert-danger(v-if="thumbnailError") {{thumbnailError}}
-          p.help-block.text-center 目前支持 mp3 格式
       .form-group.row
         label.col-md-2.form-control-label 问题
         .col-md-8
           select-question(v-model="extraData.questions")
-    template(v-else)
       .form-group.row
-        label.col-md-2.form-control-label(for="article") 阅读文字
+        label.col-md-2.form-control-label(for="article") 听力原文
+        .col-md-8
+          textarea#article.form-control(
+            v-model="extraData.article",
+            placeholder="听力原文",
+            rows="6"
+          )
+      .form-group.row
+        label.col-md-2.form-control-label(for="explain") 问题解析
+        .col-md-8
+          textarea#explain.form-control(
+            v-model="extraData.explain",
+            placeholder="问题解析",
+            rows="6",
+          )
+    template(v-else-if="exercise.type === 1")
+      .form-group.row
+        label.col-md-2.form-control-label(for="article") 全部阅读文字
         .col-md-6
           textarea#article.form-control(v-model="extraData.article" rows="6")
+      template(v-for="item in 3")
+        uploader.form-group(v-model="extraData.audios[item - 1]", :label="getPartLabel(item)")
+        .form-group.row
+          label.col-md-2.form-control-label(:for="'article-' + item") {{getPartLabel(item)}}
+          .col-md-6
+            textarea.form-control(
+              :id="'article-' + item",
+              v-model="extraData.articles[item - 1]",
+              rows="3"
+            )
+    template(v-else)
+      .form-group.row
+        label.col-md-2.form-control-label(for="article") 听力原文
+        .col-md-6
+          textarea#article.form-control(v-model="extraData.article" rows="8")
+          p.form-text.text-muted 请将需要填写的部分用 {}包裹起来，比如“have a {nice} day”，nice 即需要填写的文字。
 
     hr
     .alert.offset-2(:class="'alert-' + status", v-if="message") {{message}}
@@ -93,17 +103,16 @@
 </template>
 
 <script>
-import {mapState} from 'vuex';
 import {assign} from 'lodash';
 import axios from 'axios';
 import moment from 'moment';
 
 import SelectQuestion from 'src/components/SelectQuestion.vue';
 import Datepicker from 'src/components/Datepicker.vue';
+import Uploader from 'src/components/form/Uploader';
 import baseMixin from 'src/mixin/base';
 import exerciseMixin from "src/mixin/exercise";
-
-import {GET_SEASONS} from 'src/store/season/action-types';
+import {HANZI} from 'src/data/format';
 
 /* global API */
 
@@ -113,6 +122,7 @@ export default {
   components: {
     Datepicker,
     SelectQuestion,
+    Uploader,
   },
   mixins: [baseMixin, exerciseMixin],
 
@@ -127,6 +137,9 @@ export default {
         audio: '',
         questions: null,
         article: '',
+        audios: [],
+        articles: [],
+        explain: '',
       },
 
       API: API,
@@ -138,7 +151,6 @@ export default {
     };
   },
   computed: {
-    ...mapState('season', ['season']),
     id() {
       return this.$route.params.id;
     },
@@ -161,40 +173,11 @@ export default {
           alert('加载作业失败。' + err);
         });
     },
-    onSelectFile(event) {
-      let file = event.target.files[0];
-      if (!/\.mp3$/i.test(file.name)) {
-        alert('只能上传 *.mp3 格式的图片。');
-        event.target.value = '';
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        alert('只能上传不大于 1M 的图片。');
-        event.target.value = '';
-        return;
-      }
-      let form = new FormData();
-      form.append('file', file);
-      axios.post('file', form)
-        .then( json => {
-          this.thumbnailError = '';
-          this.extraData.audio = json.path;
-        })
-        .catch( err => {
-          if (err.response && err.response.data) {
-            err = err.response.data.message;
-          } else if (err.status === 422) {
-            err = JSON.stringify(err.body);
-          }
-          this.thumbnailError = err;
-        });
-      event.target.value = '';
-    },
-    removeFlash(event) {
-      event.target.classList.remove('flash');
+    getPartLabel(index) {
+      return `第${HANZI[index]}部分`;
     },
     save() {
-      if (this.exercise.type === 0 && !this.extraData.audio) {
+      if (!this.extraData.audio) {
         alert('请上传听力资料。');
         this.$el.querySelector('[for=file-input]').classList.add('flash');
         return;
@@ -240,7 +223,6 @@ export default {
     }
   },
   beforeMount() {
-    this.$store.dispatch(`season/${GET_SEASONS}`);
     if (this.id) {
       this.isLoaded = false;
       return this.fetch();

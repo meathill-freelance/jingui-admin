@@ -11,11 +11,10 @@ const config = require('./webpack.config');
 const production = require('./config/prod.env');
 
 const env = process.env.NODE_ENV || 'development';
-const isProd = true;//env === 'production';
+const isProd = env === 'production';
 
 config.devtool = 'source-map';
-config.plugins = config.plugins.slice(1).concat([
-  new webpack.DefinePlugin(production),
+config.plugins = config.plugins.concat([
   new HtmlWebpackPlugin({
     template: 'index.template.html',
   }),
@@ -60,11 +59,12 @@ config.devServer = {
 };
 
 if (isProd) {
-  config.plugins.push(
+  config.plugins = config.plugins.slice(1).concat([
+    new webpack.DefinePlugin(production),
     new UglifyJSPlugin({
       exclude: /^vendor.js$/,
     }),
-  );
+  ]);
   config.devtool = false;
 }
 
