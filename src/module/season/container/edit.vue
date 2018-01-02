@@ -1,11 +1,12 @@
 <template lang="pug">
 .bg-white.px-3.pt-3.pb-1.formData-editor
+  h3.mb-4 基础信息
   form.form-horizontal(
+    v-if="isLoaded",
     :action="API + 'season/'",
     method="post",
     @submit.prevent="save"
   )
-    h3.mb-4 基础信息
     .form-group.row
       label.col-md-2.form-control-label(for="title") 名称
       .col-md-6
@@ -44,10 +45,13 @@
     .form-group.row
       .col-sm-10.offset-2
         button.btn.btn-primary(:disabled="preventSubmit")
-          i.fa.fa-spin.fa-spinner(v-if="loading")
+          i.fa.fa-spin.fa-spinner(v-if="isSaving")
           i.fa.fa-check(v-else)
           | 保存
         router-link.btn.btn-link(:to="{name: season}") 取消
+
+  div(v-else)
+    i.fa.fa-spin.fa-spinner.fa-3x
 </template>
 
 <script>
@@ -74,7 +78,8 @@ export default {
       },
 
       API: API,
-      loading: false,
+      isLoaded: true,
+      isSaving: false,
       message: '',
       status: ''
     };
@@ -84,14 +89,14 @@ export default {
       return this.$route.params.id;
     },
     preventSubmit() {
-      return this.loading || this.status === 'success';
+      return this.isSaving || this.status === 'success';
     },
   },
   methods: {
     fetch() {
       return axios.get(`season/${this.id}`)
         .then( json => {
-          this.loading = false;
+          this.isLoaded = true;
           this.formData = json.data;
         })
         .catch( err => {
@@ -102,7 +107,7 @@ export default {
       event.target.classList.remove('flash');
     },
     save() {
-      this.loading = true;
+      this.isSaving = true;
       let api = 'season';
       let method = this.id ? 'patch' : 'post';
       if (this.id) {
@@ -138,13 +143,13 @@ export default {
           this.status = 'danger';
         })
         .then(() => {
-          this.loading = false;
+          this.isSaving = false;
         });
     }
   },
   beforeMount() {
     if (this.id) {
-      this.loading = true;
+      this.isLoaded = false;
       return this.fetch();
     }
   },

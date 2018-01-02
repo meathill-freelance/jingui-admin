@@ -4,6 +4,7 @@
 
 import Vue from 'vue';
 import Vuex from 'vuex';
+import season from './season/';
 import user from './user/';
 import mutations from './mutations';
 
@@ -15,6 +16,7 @@ export default {
   },
   mutations,
   modules: {
-    user
-  }
+    season,
+    user,
+  },
 };

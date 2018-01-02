@@ -24,7 +24,7 @@
             th 作业类型
             th 上线日期
             th 操作
-        tbody
+        tbody(v-if="!isLoading")
           tr(v-for="item in list", :key="item.id")
             td {{item.title}}
             td {{item.type | toType}}
@@ -48,6 +48,10 @@
                   :saving="item.saving",
                   @click.native="remove(item)",
                 ) 删除
+        tfoot(v-else)
+          tr
+            td(colspan="4")
+              i.fa.fa-spin.fa-spinner.fa-2x
 
       pagination(:total="total", :per-page="20", @change="turnToPage")
 </template>
@@ -68,6 +72,7 @@
     ],
     data() {
       return {
+        isLoading: true,
         error: '',
         filter: {},
         list: [],
@@ -85,6 +90,7 @@
           .then(response => {
             this.list = response.list;
             this.total = response.total;
+            this.isLoading = false;
           });
       },
       search(event) {

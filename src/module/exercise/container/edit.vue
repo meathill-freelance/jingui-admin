@@ -1,12 +1,13 @@
 <template lang="pug">
 .bg-white.px-3.pt-3.pb-1.exercise-editor
+  h3.mb-4 基础信息
   form.form-horizontal(
+    v-if="isLoaded",
     :action="API + 'exercise/'",
     method="post",
     enctype="multipart/form-data",
     @submit.prevent="save"
   )
-    h3.mb-4 基础信息
     .form-group.row
       label.col-md-2.form-control-label(for="title") 作业标题
       .col-md-6
@@ -28,11 +29,11 @@
           required,
         )
           option(value='', disabled) 请选择
-          option(v-for="item in seasons", :value="item.id") {{item.title}} ({{item.start_at}} ~ {{item.end_at}})
+          option(v-for="item in season", :value="item.id") {{item.title}} ({{item.start_at | toDate}} ~ {{item.end_at | toDate}})
     .form-group.row
       label.col-md-2.form-control-label(for="published_time") 上线日期
       .col-md-6
-        p.form-control-static(v-if="id") {{exercise.published_at | toDate}}
+        p.form-control-static(v-if="published") {{exercise.published_at | toDate}}
         datepicker#published_time(
           v-else
           v-model="exercise.published_at"
@@ -82,13 +83,17 @@
     .form-group.row
       .col-sm-10.offset-2
         button.btn.btn-primary(:disabled="preventSubmit")
-          i.fa.fa-spin.fa-spinner(v-if="loading")
+          i.fa.fa-spin.fa-spinner(v-if="isSaving")
           i.fa.fa-check(v-else)
           | 保存
         a.btn.btn-link(href="#/exercise/") 取消
+
+  div(v-else)
+    i.fa.fa-spin.fa-spinner.fa-3x
 </template>
 
 <script>
+import {mapState} from 'vuex';
 import {assign} from 'lodash';
 import axios from 'axios';
 import moment from 'moment';
@@ -97,6 +102,8 @@ import SelectQuestion from 'src/components/SelectQuestion.vue';
 import Datepicker from 'src/components/Datepicker.vue';
 import baseMixin from 'src/mixin/base';
 import exerciseMixin from "src/mixin/exercise";
+
+import {GET_SEASONS} from 'src/store/season/action-types';
 
 /* global API */
 
@@ -124,17 +131,19 @@ export default {
 
       API: API,
       thumbnailError: '',
-      loading: false,
+      isLoaded: true,
+      isSaving: false,
       message: '',
       status: ''
     };
   },
   computed: {
+    ...mapState('season', ['season']),
     id() {
       return this.$route.params.id;
     },
     preventSubmit() {
-      return this.loading || this.status === 'success';
+      return this.isSaving || this.status === 'success';
     },
     published() {
       return this.id && this.exercise.published_at < tomorrow;
@@ -144,7 +153,7 @@ export default {
     fetch() {
       return axios.get(`exercise/${this.id}`)
         .then( json => {
-          this.loading = false;
+          this.isLoaded = true;
           this.exercise = json.exercise;
           this.extraData = json.extra;
         })
@@ -190,7 +199,7 @@ export default {
         this.$el.querySelector('[for=file-input]').classList.add('flash');
         return;
       }
-      this.loading = true;
+      this.isSaving = true;
       let api = 'exercise';
       let method = this.id ? 'patch' : 'post';
       if (this.id) {
@@ -226,13 +235,14 @@ export default {
           this.status = 'danger';
         })
         .then(() => {
-          this.loading = false;
+          this.isSaving = false;
         });
     }
   },
   beforeMount() {
+    this.$store.dispatch(`season/${GET_SEASONS}`);
     if (this.id) {
-      this.loading = true;
+      this.isLoaded = false;
       return this.fetch();
     }
   },
