@@ -25,7 +25,7 @@
             th 上线日期
             th 操作
         tbody(v-if="!isLoading")
-          tr(v-for="item in list", :key="item.id")
+          tr(v-for="(item, index) in list", :key="item.id")
             td {{item.title}}
             td {{item.type | toType}}
             td {{item.published_at | toDate}}
@@ -46,7 +46,7 @@
                   icon="fa-trash",
                   buttonClass="btn-danger",
                   :saving="item.saving",
-                  @click.native="remove(item)",
+                  @click.native="remove(item, index)",
                 ) 删除
         tfoot(v-else)
           tr
@@ -88,7 +88,10 @@
       fetch() {
         return axios.get('exercise', {params: this.filter})
           .then(response => {
-            this.list = response.list;
+            this.list = response.list.map(item => {
+              item.saving = false;
+              return item;
+            });
             this.total = response.total;
             this.isLoading = false;
           });
@@ -101,13 +104,17 @@
         this.filter.page = page;
         this.fetch();
       },
-      remove(item) {
+      remove(item, index) {
+        if (!confirm('您确定要删除这个作业么？')) {
+          return;
+        }
         item.saving = true;
         axios.delete('exercise/' + item.id)
           .then(response => {
             if (response.code !== 0) {
               throw new Error(response.msg);
             }
+            this.list.splice(index, 1);
           })
           .catch(err => {
             err.message && alert(err.message);

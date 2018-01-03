@@ -18,7 +18,7 @@
           i.fa.fa-file-audio-o
           | 上传音频
       p.alert.alert-danger(v-if="error") {{error}}
-      p.help-block.text-center 目前支持 wav 格式
+      p.help-block.text-center 请上传 mp3 格式的音频文件
 </template>
 
 <script>
@@ -68,7 +68,7 @@
         }
         let file = event.target.files[0];
         if (!/\.(wav|mp3)/i.test(file.name)) {
-          alert('只能上传 *.wav 格式的音频。');
+          alert('只能上传 *.mp3 格式的音频。');
           event.target.value = '';
           return;
         }
