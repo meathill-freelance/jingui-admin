@@ -16,6 +16,10 @@
             | 作业管理
           ul.nav-dropdown-items
             li.nav-item
+              router-link.nav-link(to="/exercise/new")
+                i.icon-plus
+                | 添加作业
+            li.nav-item
               router-link.nav-link(:to="'/exercise/list'", exact)
                 i.icon-puzzle
                 | 全部作业

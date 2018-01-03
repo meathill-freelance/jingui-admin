@@ -11,9 +11,12 @@
         :for="domId",
         @animationend="removeFlash"
       )
-        i.fa.fa-spin.fa-spinner(v-if="isUploading")
-        i.fa.fa-file-audio-o(v-else)
-        | 上传音频
+        template(v-if="isUploading")
+          i.fa.fa-spin.fa-spinner
+          | {{ this.progress * 100 / 100 >> 0 }}%
+        template(v-else)
+          i.fa.fa-file-audio-o
+          | 上传音频
       p.alert.alert-danger(v-if="error") {{error}}
       p.help-block.text-center 目前支持 wav 格式
 </template>
@@ -46,7 +49,8 @@
         uid: '',
         error: '',
         localValue: '',
-      }
+        progress: 0,
+      };
     },
 
     methods: {
@@ -73,10 +77,13 @@
           event.target.value = '';
           return;
         }
+        this.progress = 0;
         this.isUploading = true;
         let form = new FormData();
         form.append('file', file);
-        axios.post('file', form)
+        axios.post('file', form, {
+          onUploadProgress: this.onUploadProgress.bind(this),
+        })
           .then( json => {
             this.error = '';
             this.$emit('input', json.path);
@@ -93,6 +100,9 @@
             this.isUploading = false;
           });
         event.target.value = '';
+      },
+      onUploadProgress(event) {
+        this.progress = event.loaded / event.total;
       },
     },
 

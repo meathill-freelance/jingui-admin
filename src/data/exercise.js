@@ -1,1 +1,1 @@
-export const type = ['听力练习', '阅读练习'];
+export const type = ['听力练习（选择题）', '口语练习', '听力练习（填空题）'];
