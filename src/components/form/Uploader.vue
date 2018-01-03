@@ -1,20 +1,25 @@
 <template lang="pug">
   .uploader.row
-    label.col-md-2.form-control-label(:for="domId") {{label}}
+    label.col-md-2.form-control-label(
+      :for="domId"
+    ) {{label}}
     .col-md-6
       audio.mb-3(v-if="localValue", :src="localValue", controls)
       input(type="file", @change="onSelectFile", accept="audio/*", :id="domId")
       label.btn.btn-outline-primary.btn-block.animated(
+        :class="isUploading ? 'disabled' : ''",
         :for="domId",
         @animationend="removeFlash"
       )
-        i.fa.fa-file-audio-o
+        i.fa.fa-spin.fa-spinner(v-if="isUploading")
+        i.fa.fa-file-audio-o(v-else)
         | 上传音频
       p.alert.alert-danger(v-if="error") {{error}}
-      p.help-block.text-center 目前支持 mp3 格式
+      p.help-block.text-center 目前支持 wav 格式
 </template>
 
 <script>
+  import axios from 'axios';
   import {uniqueId} from 'lodash';
 
   export default {
@@ -37,6 +42,7 @@
 
     data() {
       return {
+        isUploading: false,
         uid: '',
         error: '',
         localValue: '',
@@ -45,15 +51,20 @@
 
     methods: {
       processValue() {
-        this.localValue = value;
+        this.localValue = this.value || '';
       },
       removeFlash(event) {
         event.target.classList.remove('flash');
       },
       onSelectFile(event) {
+        if (this.isUploading) {
+          alert('正在上传，请稍候');
+          event.target.value = '';
+          return;
+        }
         let file = event.target.files[0];
-        if (!/\.mp3$/i.test(file.name)) {
-          alert('只能上传 *.mp3 格式的图片。');
+        if (!/\.(wav|mp3)/i.test(file.name)) {
+          alert('只能上传 *.wav 格式的音频。');
           event.target.value = '';
           return;
         }
@@ -62,6 +73,7 @@
           event.target.value = '';
           return;
         }
+        this.isUploading = true;
         let form = new FormData();
         form.append('file', file);
         axios.post('file', form)
@@ -76,6 +88,9 @@
               err = JSON.stringify(err.body);
             }
             this.error = err;
+          })
+          .then(() => {
+            this.isUploading = false;
           });
         event.target.value = '';
       },
@@ -96,3 +111,8 @@
     },
   }
 </script>
+
+<style lang="stylus">
+  audio
+    width 100%
+</style>

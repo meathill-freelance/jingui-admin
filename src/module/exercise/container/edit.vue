@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import {assign} from 'lodash';
+import {assign, forEach} from 'lodash';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -164,10 +164,17 @@ export default {
   methods: {
     fetch() {
       return axios.get(`exercise/${this.id}`)
-        .then( json => {
+        .then(({exercise, extra}) => {
+          extra.audios = [];
+          extra.articles = [];
+          forEach(extra, (value, key) => {
+            if (/^(audio|article)\d$/.test(key)) {
+              extra[key.slice(0, -1) + 's'].push(value);
+            }
+          });
+          this.exercise = exercise;
+          this.extraData = extra;
           this.isLoaded = true;
-          this.exercise = json.exercise;
-          this.extraData = json.extra;
         })
         .catch( err => {
           alert('加载作业失败。' + err);
