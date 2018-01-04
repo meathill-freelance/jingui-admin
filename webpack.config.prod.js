@@ -11,7 +11,7 @@ const config = require('./webpack.config');
 const production = require('./config/prod.env');
 
 const env = process.env.NODE_ENV || 'development';
-const isProd = env === 'production';
+const isProd = true;//env === 'production';
 
 config.devtool = 'source-map';
 config.plugins = config.plugins.concat([
@@ -19,7 +19,7 @@ config.plugins = config.plugins.concat([
     template: 'index.template.html',
   }),
   new ExtractTextPlugin({
-    filename: '[name].css',
+    filename: '[name].[hash].css',
     allChunks: true,
   }),
 ]);

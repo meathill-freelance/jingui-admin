@@ -72,8 +72,8 @@
           event.target.value = '';
           return;
         }
-        if (file.size > 5 * 1024 * 1024) {
-          alert('只能上传不大于 5M 的音频。');
+        if (file.size > 10 * 1024 * 1024) {
+          alert('只能上传不大于 10M 的音频。');
           event.target.value = '';
           return;
         }

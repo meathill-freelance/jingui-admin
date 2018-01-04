@@ -59,10 +59,10 @@
             rows="6"
           )
       .form-group.row
-        label.col-md-2.form-control-label(for="explain") 问题解析
+        label.col-md-2.form-control-label(for="explaination") 问题解析
         .col-md-8
-          textarea#explain.form-control(
-            v-model="extraData.explain",
+          textarea#explaination.form-control(
+            v-model="extraData.explaination",
             placeholder="问题解析",
             rows="6",
           )
@@ -139,7 +139,7 @@ export default {
         article: '',
         audios: [],
         articles: [],
-        explain: '',
+        explaination: '',
       },
 
       API: API,
