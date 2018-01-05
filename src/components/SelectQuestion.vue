@@ -1,6 +1,6 @@
 <template lang="pug">
   div.select-question-field(@change="onChange")
-    div.card(v-for="(item, index) in localValue", :class="item.newOption ? 'new-option' : ''")
+    div.card(v-for="(item, index) in localValue", :data-id="item.uid")
       h4 题目-{{index + 1}}
       .form-group
         input.form-control(
@@ -8,7 +8,7 @@
           v-model="item.title",
           placeholder="题目",
         )
-      template(v-for="(option, index) in item.options")
+      template(v-for="(option, index2) in item.options")
         .row
           .col-2.text-right
             .form-check.mt-2
@@ -17,12 +17,12 @@
                   type="radio",
                   v-model="item.answer",
                   :name="uid + '-' + index + '-answer'",
-                  :value="index",
+                  :value="index2",
                 )
                 span 正确
           .col-10
             input.form-control.option(
-              v-model="item.options[index]",
+              v-model="item.options[index2]",
               @keydown.enter.prevent="addOption(item)",
             )
       .row.mt-3
@@ -69,10 +69,12 @@
 
       addOption(item) {
         item.options.push('');
-        item.newOption = true;
+        let uid = uniqueId('sq-input-');
+        item.uid = uid;
         this.$nextTick()
           .then(() => {
-            let options = this.$el.querySelector('.new-option').querySelectorAll('.option');
+            let group = this.$el.querySelector(`[data-id="${uid}"]`);
+            let options = group.querySelectorAll('.option');
             options[options.length - 1].focus();
           });
       },

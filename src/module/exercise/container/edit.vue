@@ -221,7 +221,8 @@ export default {
           } else if (err.status === 423) {
             err = err.body.msg;
           }
-          this.message = err;
+          let errorMessage = err.data && err.data.message ? err.data.message : err;
+          this.message = errorMessage;
           this.status = 'danger';
         })
         .then(() => {
