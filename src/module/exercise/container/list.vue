@@ -28,7 +28,7 @@
           tr(v-for="(item, index) in list", :key="item.id")
             td {{item.title}}
             td {{item.type | toType}}
-            td {{item.published_at | toDate}}
+            td {{item.day}}
             td
               .btn-group(role="group")
                 a.btn.btn-outline-primary(:href="'#/exercise/' + item.id + '/edit'")

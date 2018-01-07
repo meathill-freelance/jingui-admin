@@ -20,18 +20,16 @@
           maxlength="100"
         )
     .form-group.row
-      label.col-md-2.form-control-label(for="published_time") 上线日期
-      .col-md-6
-        p.form-control-static(v-if="published") {{exercise.published_at | toDate}}
-        datepicker#published_time(
-          v-else
-          v-model="exercise.published_at"
-          format="yyyy-MM-dd",
-          name="published_time"
-          placeholder="上线日期"
+      label.col-md-2.form-control-label(for="day") 上线日期
+      .col-md-2
+        select#day.form-control(
+          required,
+          v-model="exercise.day"
         )
+          option(value='') 请选择
+          option(v-for="n in 21") {{n}}
     .form-group.row
-      <label class="col-md-2 form-control-label" for="type">作业类型</label>
+      label.col-md-2.form-control-label(for="type") 作业类型
       .col-md-6
         p.form-control-static(v-if="id") {{ exercise.type | toType }}
         select#type.form-control(
