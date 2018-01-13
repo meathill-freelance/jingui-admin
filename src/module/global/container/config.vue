@@ -11,7 +11,14 @@
           td
             .alert.alert-danger(v-if="item.error") {{ item.error }}
             .d-flex(v-if="item.isEditing")
+              select.form-control.mr-2(
+                v-if="item.type === 'select'",
+                v-model="item.value",
+              )
+                option(value="") 请选择
+                option(v-for="option in item.options", :value="option.id") {{option.label}}
               input.form-control.mr-2(
+                v-else,
                 :type="item.type",
                 :placeholder="item.placeholder",
                 v-model="item.value",
@@ -23,7 +30,7 @@
               ) 保存
               button.btn.btn-link(@click="cancel(item)") 取消
             a.editable(v-else, @click="edit(item)")
-              span {{ item.value }}
+              span {{ getValue(item) }}
               i.fa.fa-edit
             transition(
               enter-active-class="animated fadeIn",
@@ -34,7 +41,7 @@
 
 <script>
   import axios from 'axios';
-  import {pick} from 'lodash';
+  import {find, pick} from 'lodash';
 
   import SpinButton from 'src/components/form/SpinButton.vue';
   import {convertKeyToName, fillKeys} from "src/data/global";
@@ -57,6 +64,15 @@
       },
       edit(item) {
         item.isEditing = true;
+      },
+      getValue(item) {
+        if (item.type === 'select') {
+          let option = find(item.options, option => option.id == item.value);
+          if (option) {
+            return option.label;
+          }
+        }
+        return item.value;
       },
       save(item) {
         item.isSaving = true;

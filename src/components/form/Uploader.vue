@@ -154,7 +154,8 @@
   .uploader
     audio,
     .img-thumbnail
-      width 100%
+      max-width 100%
+      max-height 300px
 
     input[type=file]
       display none

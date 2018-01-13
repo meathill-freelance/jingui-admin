@@ -1,14 +1,29 @@
-import {defaults, keyBy, map, uniq} from 'lodash';
+import {keyBy, uniq} from 'lodash';
 
 const config = {
   original_price: {
     name: '正价',
     type: 'number',
-    placeholder: '请填写分，比如 ￥9.9 对应 990 分'
+    placeholder: '请填写分，比如 ￥9.9 对应 990 分',
   },
   discount_price: {
     name: '折后价',
     type: 'number',
+    placeholder: '请填写分，比如 ￥9.9 对应 990 分',
+  },
+  has_discount: {
+    name: '是否支持分享折扣',
+    type: 'select',
+    options: [
+      {
+        id: 0,
+        label: '支持',
+      },
+      {
+        id: 1,
+        label: '不支持',
+      },
+    ],
   },
 };
 
