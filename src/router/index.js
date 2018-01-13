@@ -9,7 +9,7 @@ import Page404 from '../views/pages/Page404.vue';
 import Page500 from '../views/pages/Page500.vue';
 
 import exercise from 'src/module/exercise/router';
-import season from 'src/module/season/router';
+import global from 'src/module/global/router';
 
 Vue.use(Router);
 
@@ -29,7 +29,7 @@ export default new Router({
           component: Dashboard
         },
         ...exercise,
-        ...season,
+        ...global,
       ],
     },
     {

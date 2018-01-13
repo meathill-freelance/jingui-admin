@@ -1,3 +1,12 @@
 .form-control-label
   text-align right
   margin .4rem 0 0
+
+.editable
+  border-bottom 1px dashed currentColor
+
+  span:empty::before
+    content: '（空）'
+
+  i
+    margin-left .5em
