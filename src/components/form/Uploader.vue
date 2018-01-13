@@ -1,24 +1,21 @@
 <template lang="pug">
-  .uploader.row
-    label.col-md-2.form-control-label(
-      :for="domId"
-    ) {{label}}
-    .col-md-6
-      audio.mb-3(v-if="localValue", :src="localValue", controls)
-      input(type="file", @change="onSelectFile", accept="audio/*", :id="domId")
-      label.btn.btn-outline-primary.btn-block.animated(
-        :class="isUploading ? 'disabled' : ''",
-        :for="domId",
-        @animationend="removeFlash"
-      )
-        template(v-if="isUploading")
-          i.fa.fa-spin.fa-spinner
-          | {{ this.progress * 100 / 100 >> 0 }}%
-        template(v-else)
-          i.fa.fa-file-audio-o
-          | 上传音频
-      p.alert.alert-danger(v-if="error") {{error}}
-      p.help-block.text-center 请上传 mp3 格式的音频文件
+  .uploader
+    img.img-thumbnail(v-if="localValue && isImage", :src="localValue")
+    audio.mb-3(v-if="localValue && isAudio", :src="localValue", controls)
+    input(type="file", @change="onSelectFile", :accept="mimeType", :id="domId")
+    label.btn.btn-outline-primary.btn-block.animated(
+      :class="isUploading ? 'disabled' : ''",
+      :for="domId",
+      @animationend="removeFlash"
+    )
+      template(v-if="isUploading")
+        i.fa.fa-spin.fa-spinner
+        | {{ this.progress * 100 / 100 >> 0 }}%
+      template(v-else)
+        i.fa(:class="fileIcon")
+        | 上传{{this.fileType}}
+    p.alert.alert-danger(v-if="error") {{error}}
+    p.help-block.text-center {{ label }}
 </template>
 
 <script>
@@ -33,13 +30,43 @@
       },
       label: {
         type: String,
-        default: '上传音频',
+        default: '请上传 mp3 格式的音频文件',
+      },
+      type: {
+        type: String,
+        default: 'audio',
+      },
+      fileType: {
+        type: String,
+        default: '音频',
+      },
+      fileIcon: {
+        type: String,
+        default: 'fa-file-audio-o',
+      },
+      mimeType: {
+        type: String,
+        default: 'audio/*',
+      },
+      extension: {
+        type: RegExp,
+        default: /\.mp3$/i,
+      },
+      errorMessage: {
+        type: String,
+        default: '只能上传 MP3 格式的音频',
       },
     },
 
     computed: {
       domId() {
         return 'file-input-' + this.uid;
+      },
+      isImage() {
+        return /\.(jpg|png|gif)$/.test(this.localValue);
+      },
+      isAudio() {
+        return /\.mp3$/.test(this.localValue);
       },
     },
 
@@ -67,13 +94,13 @@
           return;
         }
         let file = event.target.files[0];
-        if (!/\.(wav|mp3)/i.test(file.name)) {
-          alert('只能上传 *.mp3 格式的音频。');
+        if (!this.extension.test(file.name)) {
+          alert(this.errorMessage);
           event.target.value = '';
           return;
         }
         if (file.size > 10 * 1024 * 1024) {
-          alert('只能上传不大于 10M 的音频。');
+          alert('只能上传不大于 10M 的文件。');
           event.target.value = '';
           return;
         }
@@ -81,6 +108,7 @@
         this.isUploading = true;
         let form = new FormData();
         form.append('file', file);
+        form.append('type', this.type);
         axios.post('file', form, {
           onUploadProgress: this.onUploadProgress.bind(this),
         })
@@ -123,6 +151,11 @@
 </script>
 
 <style lang="stylus">
-  audio
-    width 100%
+  .uploader
+    audio,
+    .img-thumbnail
+      width 100%
+
+    input[type=file]
+      display none
 </style>

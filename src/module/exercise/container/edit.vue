@@ -42,7 +42,9 @@
           option(value="2") 听力练习（填空题）
 
     hr
-    uploader.form-group(v-model="extraData.audio")
+    .form-group.row
+      label.col-md-2.form-control-label 上传音频
+      uploader.col-md-6(v-model="extraData.audio")
     template(v-if="exercise.type === 0")
       .form-group.row
         label.col-md-2.form-control-label 问题
@@ -70,7 +72,9 @@
         .col-md-6
           textarea#article.form-control(v-model="extraData.article" rows="6")
       template(v-for="item in 3")
-        uploader.form-group(v-model="extraData.audios[item - 1]", :label="getPartLabel(item)")
+        .form-group.row
+          label.col-md-2.form-control-label {{ getPartLabel(item) }}
+          uploader.col-md-6(v-model="extraData.audios[item - 1]",)
         .form-group.row
           label.col-md-2.form-control-label(:for="'article-' + item") {{getPartLabel(item)}}
           .col-md-6

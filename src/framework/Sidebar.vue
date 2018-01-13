@@ -23,6 +23,23 @@
               router-link.nav-link(:to="'/exercise/list'", exact)
                 i.icon-puzzle
                 | 全部作业
+        router-link.nav-item.nav-dropdown(
+          tag="li",
+          :to="{ path: '/cover'}",
+          disabled,
+        )
+          .nav-link.nav-dropdown-toggle(@click="handleClick")
+            i.icon-picture
+            | 封面图管理
+          ul.nav-dropdown-items
+            li.nav-item
+              router-link.nav-link(to="/cover/new")
+                i.icon-plus
+                | 添加封面图
+            li.nav-item
+              router-link.nav-link(to="/cover/list")
+                i.icon-picture
+                | 全部封面图
         li.nav-item
           router-link.nav-link(to="/global")
             i.icon-settings

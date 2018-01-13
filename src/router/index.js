@@ -10,6 +10,7 @@ import Page500 from '../views/pages/Page500.vue';
 
 import exercise from 'src/module/exercise/router';
 import global from 'src/module/global/router';
+import cover from 'src/module/cover/router';
 
 Vue.use(Router);
 
@@ -30,6 +31,7 @@ export default new Router({
         },
         ...exercise,
         ...global,
+        ...cover,
       ],
     },
     {
