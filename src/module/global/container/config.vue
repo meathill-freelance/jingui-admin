@@ -30,7 +30,9 @@
               ) 保存
               button.btn.btn-link(@click="cancel(item)") 取消
             a.editable(v-else, @click="edit(item)")
-              span {{ getValue(item) }}
+              span(v-if="item.value") {{ getValue(item) }}
+              span(v-else-if="item.default") （空，默认：{{item.default}}）
+              span(v-else) （空）
               i.fa.fa-edit
             transition(
               enter-active-class="animated fadeIn",
@@ -64,6 +66,9 @@
       },
       edit(item) {
         item.isEditing = true;
+        if (item.value === undefined && item.default) {
+          item.value = item.default;
+        }
       },
       getValue(item) {
         if (item.type === 'select') {

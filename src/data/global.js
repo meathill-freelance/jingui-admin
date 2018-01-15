@@ -25,6 +25,12 @@ const config = {
       },
     ],
   },
+  share_count: {
+    name: '每个群最高可分享次数',
+    type: 'number',
+    placeholder: '超过这个数字的分享被视作无效',
+    default: 3,
+  },
 };
 
 export function convertKeyToName(key) {
