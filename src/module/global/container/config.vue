@@ -91,6 +91,7 @@
             item.isEditing = false;
             item.isSuccess = true;
             item.origin = item.value;
+            item.error = '';
             clearTimeout(item.timeout);
             item.timeout = setTimeout(() => {
               item.isSuccess = false;
