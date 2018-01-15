@@ -15,7 +15,7 @@
                 v-if="item.type === 'select'",
                 v-model="item.value",
               )
-                option(value="") 请选择
+                option(value="", disabled) 请选择
                 option(v-for="option in item.options", :value="option.id") {{option.label}}
               input.form-control.mr-2(
                 v-else,

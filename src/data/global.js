@@ -31,6 +31,26 @@ const config = {
     placeholder: '超过这个数字的分享被视作无效',
     default: 3,
   },
+  is_all_open: {
+    name: '是否将所有课程项所有学院开放',
+    type: 'select',
+    options: [
+      {
+        id: 0,
+        label: '不要',
+      },
+      {
+        id: 1,
+        label: '是的',
+      },
+    ],
+    default: 0,
+  },
+  intro_link: {
+    name: '活动详情的链接',
+    type: 'url',
+    placeholder: '请输入完整 URL',
+  },
 };
 
 export function convertKeyToName(key) {
