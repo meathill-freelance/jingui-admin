@@ -51,6 +51,21 @@ const config = {
     type: 'url',
     placeholder: '请输入完整 URL',
   },
+  share_title: {
+    name: '分享标题',
+    type: 'text',
+    placeholder: '分享标题',
+  },
+  share_content: {
+    name: '分享文案',
+    type: 'longtext',
+    placeholder: '可以直接回车',
+  },
+  shared_content: {
+    name: '分享后文案',
+    type: 'longtext',
+    placeholder: '可以直接回车',
+  },
 };
 
 export function convertKeyToName(key) {

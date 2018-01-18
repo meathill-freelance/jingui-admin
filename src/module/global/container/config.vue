@@ -17,6 +17,12 @@
               )
                 option(value="", disabled) 请选择
                 option(v-for="option in item.options", :value="option.id") {{option.label}}
+              textarea.form-control.mr-2(
+                v-else-if="item.type === 'longtext'",
+                v-model="item.value",
+                :placeholder="item.placeholder",
+                @keydown.enter.ctrl="save(item)",
+              )
               input.form-control.mr-2(
                 v-else,
                 :type="item.type",
