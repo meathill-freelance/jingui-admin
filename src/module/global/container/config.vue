@@ -121,6 +121,7 @@
             item.isEditing = false;
             item.isSuccess = false;
             item.origin = item.value;
+            item.error = '';
             return item;
           });
         });

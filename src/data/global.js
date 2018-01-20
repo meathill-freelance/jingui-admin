@@ -6,10 +6,18 @@ const config = {
     type: 'number',
     placeholder: '请填写分，比如 ￥9.9 对应 990 分',
   },
+  original_price_title: {
+    name: '正价名称',
+    placeholder: '默认"土豪模式"',
+  },
   discount_price: {
     name: '折后价',
     type: 'number',
     placeholder: '请填写分，比如 ￥9.9 对应 990 分',
+  },
+  discount_price_title: {
+    name: '折扣价名称',
+    placeholder: '默认"优惠模式"',
   },
   has_discount: {
     name: '是否支持分享折扣',
@@ -65,6 +73,21 @@ const config = {
     name: '分享后文案',
     type: 'longtext',
     placeholder: '可以直接回车',
+  },
+  has_cs_discount: {
+    name: '禁用分享后是否允许客服改价',
+    type: 'select',
+    options: [
+      {
+        id: 0,
+        label: '允许',
+      },
+      {
+        id: 1,
+        label: '不允许',
+      },
+    ],
+    default: 0,
   },
 };
 
