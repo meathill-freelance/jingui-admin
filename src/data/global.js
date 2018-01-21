@@ -10,6 +10,10 @@ const config = {
     name: '正价名称',
     placeholder: '默认"土豪模式"',
   },
+  original_price_label: {
+    name: '正价描述',
+    placeholder: '默认"99元，原价直接购买"',
+  },
   discount_price: {
     name: '折后价',
     type: 'number',
@@ -18,6 +22,10 @@ const config = {
   discount_price_title: {
     name: '折扣价名称',
     placeholder: '默认"优惠模式"',
+  },
+  discount_price_label: {
+    name: '折后价描述',
+    placeholder: '默认"9.9元，分享至考研微信群后购买"',
   },
   has_discount: {
     name: '是否支持分享折扣',
