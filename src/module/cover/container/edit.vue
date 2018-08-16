@@ -8,20 +8,19 @@
     @submit.prevent="save"
   )
     .form-group.row
-      label.col-md-2.form-control-label(for="label") 封面图名称
+      label.col-md-2.form-control-label(for="name") 封面图名称
       .col-md-6
-        input.form-control(
-          id="label",
-          name="label",
+        input#name.form-control(
+          name="name",
           placeholder="名称",
           v-model="formData.name",
           required,
           maxlength="100",
         )
     .form-group.row
-      label.col-md-2.form-control-label(for="path") 长度
+      label.col-md-2.form-control-label(for="qrcode") 长度
       .col-md-6
-        uploader#path.form-group(
+        uploader#qrcode.form-group(
           v-model="formData.qrcode",
           file-type="图片",
           file-icon="fa-file-image-o",
@@ -47,7 +46,7 @@
 </template>
 
 <script>
-import {assign} from 'lodash';
+import {assign, } from 'lodash';
 import axios from 'axios';
 
 import Datepicker from 'src/components/Datepicker.vue';
@@ -61,15 +60,15 @@ export default {
     Datepicker,
     Uploader,
   },
-  mixins: [baseMixin],
+  mixins: [
+    baseMixin,
+  ],
 
-  data() {
+  data () {
     return {
       formData: {
-        label: '',
-        start_at: '',
-        end_at: '',
-        path: '',
+        name: '',
+        qrcode: '',
       },
 
       API: API,
@@ -81,28 +80,28 @@ export default {
     };
   },
   computed: {
-    id() {
+    id () {
       return this.$route.params.id;
     },
-    preventSubmit() {
+    preventSubmit () {
       return this.isSaving || this.status === 'success';
     },
   },
   methods: {
-    fetch() {
+    fetch () {
       return axios.get(`cover/${this.id}`)
-        .then( json => {
+        .then(json => {
           this.isLoaded = true;
           this.formData = json.data;
         })
-        .catch( err => {
+        .catch(err => {
           alert('加载封面图失败。' + err);
         });
     },
-    removeFlash(event) {
+    removeFlash (event) {
       event.target.classList.remove('flash');
     },
-    save() {
+    save () {
       this.isSaving = true;
       let api = 'cover';
       let method = this.id ? 'patch' : 'post';
@@ -111,20 +110,20 @@ export default {
       }
       const data = assign({}, this.formData, this.extraData);
       axios[method](api, data)
-        .then( json => {
+        .then(json => {
           if (json.code !== 0) {
             throw new Error('保存失败。' + json.msg);
           }
 
           this.message = '保存成功';
           this.status = 'success';
-          setTimeout( () => {
+          setTimeout(() => {
             this.$router.push({
-              name: '封面图管理'
-            })
+              name: '封面图管理',
+            });
           }, 2500);
         })
-        .catch( err => {
+        .catch(err => {
           if (err.status === 422) { // 提交数据有误，表单验证不通过
             err = '保存失败。' + err.body.map((value, key) => {
               if (value instanceof Array) {
@@ -141,19 +140,19 @@ export default {
         .then(() => {
           this.isSaving = false;
         });
-    }
+    },
   },
-  beforeMount() {
+  beforeMount () {
     if (this.id) {
       this.isLoaded = false;
       return this.fetch();
     }
   },
   watch: {
-    '$route'(to) {
+    '$route' (to) {
       this.id = to.params.id;
       this.fetch();
     },
   },
-}
+};
 </script>
