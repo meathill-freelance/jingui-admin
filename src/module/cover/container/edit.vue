@@ -95,7 +95,7 @@ export default {
           this.formData = json.data;
         })
         .catch(err => {
-          alert('加载封面图失败。' + err);
+          alert('加载群信息失败。' + err);
         });
     },
     removeFlash (event) {
@@ -119,7 +119,7 @@ export default {
           this.status = 'success';
           setTimeout(() => {
             this.$router.push({
-              name: '封面图管理',
+              name: 'cover.list',
             });
           }, 2500);
         })

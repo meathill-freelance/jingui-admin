@@ -4,7 +4,7 @@
       form.form-inline.mr-auto.mt-2.mt-lg-0
         a.btn.btn-outline-primary.mr-sm-2.my-sm-0(href="#/cover/new")
           i.fa.fa-plus
-          | 新增封面图
+          | 新建微信群
 
     .bg-white.px-3.pt-3.pb-1
       <div class="alert alert-danger" v-if="error">
@@ -87,7 +87,7 @@
         this.fetch();
       },
       remove(index, item) {
-        if (!confirm('您确定要删除这个封面么')) {
+        if (!confirm('您确定要删除这个微信群么')) {
           return;
         }
         item.saving = true;
