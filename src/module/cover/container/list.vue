@@ -14,18 +14,14 @@
       table.table.table-bordered.cover-list
         thead
           tr
-            th 封面图名称
-            th 缩略图
-            th 上线时间
-            th 下线时间
+            th 微信群名称
+            th 二维码
             th 操作
         tbody(v-if="!isLoading")
           tr(v-for="(item, index) in list", :key="item.id")
-            td {{item.label}}
+            td {{item.name}}
             td
-              img.img-thumbnail(:src="item.path")
-            td {{item.start_at | toDate}}
-            td {{item.end_at | toDate}}
+              img.img-thumbnail(:src="item.qrcode")
             td
               .btn-group(role="group")
                 router-link.btn.btn-outline-primary(:to="{name: 'cover.edit', params: {id: item.id}}", )

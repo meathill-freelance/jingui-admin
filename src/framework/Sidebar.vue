@@ -11,18 +11,6 @@
           :to="{ path: '/exercise'}",
           disabled
         )
-          .nav-link.nav-dropdown-toggle(@click="handleClick")
-            i.icon-puzzle
-            | 作业管理
-          ul.nav-dropdown-items
-            li.nav-item
-              router-link.nav-link(to="/exercise/new")
-                i.icon-plus
-                | 添加作业
-            li.nav-item
-              router-link.nav-link(:to="'/exercise/list'", exact)
-                i.icon-puzzle
-                | 全部作业
         router-link.nav-item.nav-dropdown(
           tag="li",
           :to="{ path: '/cover'}",
@@ -30,20 +18,16 @@
         )
           .nav-link.nav-dropdown-toggle(@click="handleClick")
             i.icon-picture
-            | 封面图管理
+            | 微信群管理
           ul.nav-dropdown-items
             li.nav-item
               router-link.nav-link(to="/cover/new")
                 i.icon-plus
-                | 添加封面图
+                | 新建群
             li.nav-item
               router-link.nav-link(to="/cover/list")
                 i.icon-picture
-                | 全部封面图
-        li.nav-item
-          router-link.nav-link(to="/global")
-            i.icon-settings
-            | 全局设置
+                | 全部微信群
 </template>
 
 <script>

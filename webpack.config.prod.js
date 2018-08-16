@@ -53,7 +53,7 @@ config.module.loaders = config.module.loaders.slice(0, 2).concat([
   },
 ]);
 config.devServer = {
-  contentBase: path.join(__dirname, "dist"),
+  contentBase: path.join(__dirname, 'dist'),
   compress: true,
   port: 9002,
 };

@@ -4,7 +4,7 @@ import Edit from './container/edit.vue';
 export default [
   {
     path: 'cover',
-    name: '封面图管理',
+    name: '微信群管理',
     redirect: 'cover/list',
     component: {
       render(createElement) {
@@ -16,7 +16,7 @@ export default [
         path: 'list',
         name: 'cover.list',
         meta: {
-          label: '全部封面图',
+          label: '全部群',
         },
         component: List,
       },
@@ -24,7 +24,7 @@ export default [
         path: 'new',
         name: 'cover.new',
         meta:{
-          label: '添加新封面图'
+          label: '新建群',
         },
         component: Edit,
       },
@@ -32,7 +32,7 @@ export default [
         path: ':id/edit',
         name: 'cover.edit',
         meta: {
-          label: '编辑封面图',
+          label: '编辑群',
         },
         component: Edit,
       },

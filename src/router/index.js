@@ -27,10 +27,8 @@ export default new Router({
         {
           path: 'dashboard',
           name: '欢迎面板',
-          component: Dashboard
+          component: Dashboard,
         },
-        ...exercise,
-        ...global,
         ...cover,
       ],
     },

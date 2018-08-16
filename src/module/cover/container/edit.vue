@@ -14,7 +14,7 @@
           id="label",
           name="label",
           placeholder="名称",
-          v-model="formData.label",
+          v-model="formData.name",
           required,
           maxlength="100",
         )
@@ -22,7 +22,7 @@
       label.col-md-2.form-control-label(for="path") 长度
       .col-md-6
         uploader#path.form-group(
-          v-model="formData.path",
+          v-model="formData.qrcode",
           file-type="图片",
           file-icon="fa-file-image-o",
           mime-type="image/*",
@@ -30,24 +30,6 @@
           errorMessage="只能上传 JPG、PNG 格式的图片文件。",
           type="cover",
           :extension="extensionReg",
-        )
-    .form-group.row
-      label.col-md-2.form-control-label(for="start_at") 上线日期
-      .col-md-6
-        datepicker#start_at(
-          v-model="formData.start_at"
-          format="yyyy-MM-dd",
-          name="start_at",
-          placeholder="上线日期",
-        )
-    .form-group.row
-      label.col-md-2.form-control-label(for="end_at") 下线日期
-      .col-md-6
-        datepicker#end_at(
-          v-model="formData.end_at"
-          format="yyyy-MM-dd",
-          name="end_at",
-          placeholder="下线日期",
         )
 
     hr
@@ -111,8 +93,6 @@ export default {
       return axios.get(`cover/${this.id}`)
         .then( json => {
           this.isLoaded = true;
-          json.data.start_at = json.data.start_at.substr(0, 10);
-          json.data.end_at = json.data.end_at.substr(0, 10);
           this.formData = json.data;
         })
         .catch( err => {
