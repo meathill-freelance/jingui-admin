@@ -8,7 +8,7 @@
     @submit.prevent="save"
   )
     .form-group.row
-      label.col-md-2.form-control-label(for="name") 封面图名称
+      label.col-md-2.form-control-label(for="name") 微信群名称
       .col-md-6
         input#name.form-control(
           name="name",
@@ -18,7 +18,7 @@
           maxlength="100",
         )
     .form-group.row
-      label.col-md-2.form-control-label(for="qrcode") 长度
+      label.col-md-2.form-control-label(for="qrcode") 二维码
       .col-md-6
         uploader#qrcode.form-group(
           v-model="formData.qrcode",
