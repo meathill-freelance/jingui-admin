@@ -15,11 +15,13 @@
         thead
           tr
             th 微信群名称
+            th 微信群全称
             th 二维码
             th 操作
         tbody(v-if="!isLoading")
           tr(v-for="(item, index) in list", :key="item.id")
             td {{item.name}}
+            td {{item.full_name}}
             td
               img.img-thumbnail(:src="item.qrcode")
             td

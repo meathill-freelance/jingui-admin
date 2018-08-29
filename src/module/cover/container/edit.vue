@@ -15,6 +15,16 @@
           placeholder="名称",
           v-model="formData.name",
           required,
+          maxlength="40",
+        )
+    .form-group.row
+      label.col-md-2.form-control-label(for="full-name") 微信群全称
+      .col-md-6
+        input#full-name.form-control(
+          name="full_name",
+          placeholder="全称",
+          v-model="formData.full_name",
+          required,
           maxlength="100",
         )
     .form-group.row

@@ -8,8 +8,8 @@ import Logout from '../views/pages/Logout.vue';
 import Page404 from '../views/pages/Page404.vue';
 import Page500 from '../views/pages/Page500.vue';
 
-import exercise from 'src/module/exercise/router';
-import global from 'src/module/global/router';
+import feedback from 'src/module/feedback/router';
+import customer from 'src/module/customer/router';
 import cover from 'src/module/cover/router';
 
 Vue.use(Router);
@@ -30,6 +30,8 @@ export default new Router({
           component: Dashboard,
         },
         ...cover,
+        ...feedback,
+        ...customer,
       ],
     },
     {

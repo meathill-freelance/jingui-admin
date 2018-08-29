@@ -8,11 +8,6 @@
             | 首页
         router-link.nav-item.nav-dropdown(
           tag="li",
-          :to="{ path: '/exercise'}",
-          disabled
-        )
-        router-link.nav-item.nav-dropdown(
-          tag="li",
           :to="{ path: '/cover'}",
           disabled,
         )
@@ -28,6 +23,18 @@
               router-link.nav-link(to="/cover/list")
                 i.icon-picture
                 | 全部微信群
+        li.nav-item
+          router-link.nav-link(
+            to="/feedback",
+          )
+            i.icon-bubbles
+            | 意见建议
+        li.nav-item
+          router-link.nav-link(
+            to="/customer",
+          )
+            i.icon-user
+            | 用户信息
 </template>
 
 <script>
