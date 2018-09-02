@@ -35,6 +35,10 @@
           )
             i.icon-user
             | 用户信息
+        li.nav-item
+          router-link.nav-link(to="/global")
+            i.icon-settings
+            | 全局设置
 </template>
 
 <script>

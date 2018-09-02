@@ -5,6 +5,7 @@
         tr
           th 字段名
           th 字段值
+          th 补充说明
       tbody
         tr(v-for="item in formData")
           td {{ item.name }}
@@ -36,7 +37,7 @@
               ) 保存
               button.btn.btn-link(@click="cancel(item)") 取消
             a.editable(v-else, @click="edit(item)")
-              span(v-if="item.value") {{ getValue(item) }}
+              span(v-if="item.value !== null") {{ getValue(item) }}
               span(v-else-if="item.default") （空，默认：{{item.default}}）
               span(v-else) （空）
               i.fa.fa-edit
@@ -45,38 +46,39 @@
               leave-active-class="animated fadeOut",
             )
               .badge.badge-success.ml-3(v-if="item.isSuccess") 保存成功
+          td {{item.hint || ''}}
 </template>
 
 <script>
   import axios from 'axios';
-  import {find, pick} from 'lodash';
+  import {find, pick, } from 'lodash';
 
   import SpinButton from 'src/components/form/SpinButton.vue';
-  import {convertKeyToName, fillKeys} from "src/data/global";
+  import {convertKeyToName, fillKeys, } from 'src/data/global';
 
   export default {
     components: {
       SpinButton,
     },
 
-    data() {
+    data () {
       return {
         formData: null,
-      }
+      };
     },
 
     methods: {
-      cancel(item) {
+      cancel (item) {
         item.value = item.origin;
         item.isEditing = false;
       },
-      edit(item) {
+      edit (item) {
         item.isEditing = true;
         if (item.value === undefined && item.default) {
           item.value = item.default;
         }
       },
-      getValue(item) {
+      getValue (item) {
         if (item.type === 'select') {
           let option = find(item.options, option => option.id == item.value);
           if (option) {
@@ -85,7 +87,7 @@
         }
         return item.value;
       },
-      save(item) {
+      save (item) {
         item.isSaving = true;
         let method = item.id ? 'put' : 'post';
         let url = 'global/config';
@@ -112,7 +114,7 @@
       },
     },
 
-    beforeMount() {
+    beforeMount () {
       axios.get('global/config')
         .then(response => {
           let data = fillKeys(response.data || []);
@@ -126,5 +128,5 @@
           });
         });
     },
-  }
+  };
 </script>

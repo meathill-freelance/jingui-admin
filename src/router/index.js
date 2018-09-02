@@ -11,6 +11,7 @@ import Page500 from '../views/pages/Page500.vue';
 import feedback from 'src/module/feedback/router';
 import customer from 'src/module/customer/router';
 import cover from 'src/module/cover/router';
+import global from 'src/module/global/router';
 
 Vue.use(Router);
 
@@ -32,6 +33,7 @@ export default new Router({
         ...cover,
         ...feedback,
         ...customer,
+        ...global,
       ],
     },
     {
@@ -40,30 +42,30 @@ export default new Router({
       component: {
         render (createElement) {
           return createElement('router-view');
-        }
+        },
       },
       children: [
         {
           path: '404',
           name: 'Page404',
-          component: Page404
+          component: Page404,
         },
         {
           path: '500',
           name: 'Page500',
-          component: Page500
+          component: Page500,
         },
-      ]
+      ],
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
     },
     {
       path: '/logout',
       name: 'Logout',
-      component: Logout
-    }
-  ]
-})
+      component: Logout,
+    },
+  ],
+});
