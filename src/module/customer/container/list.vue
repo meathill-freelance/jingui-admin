@@ -26,6 +26,8 @@
             th 目标专业
             th 考研年份
             th 研友要求
+            th 注册时间
+            th 填写手机号
         tbody(v-if="!isLoading")
           tr(v-for="(item, index) in list", :key="item.id")
             td {{item.customer.nickname}}
@@ -37,6 +39,8 @@
             td {{item.customer.recruitment && item.customer.recruitment.major}}
             td {{item.customer.recruitment && item.customer.recruitment.year}}
             td {{item.customer.recruitment && item.customer.recruitment.excerpt}}
+            td {{item.customer.created_at}}
+            td {{item.updated_at}}
 
         tfoot(v-else)
           tr
