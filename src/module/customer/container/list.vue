@@ -7,7 +7,7 @@
 
       .actions-bar.d-flex.justify-content-end.mb-3
         a.btn.btn-secondary(
-          :href="baseURL + '/customer/export'",
+          :href="getDownloadURL()",
           target="_blank",
           download="导出报名记录.csv",
         )
@@ -76,7 +76,6 @@
         filter: {},
         list: [],
         total: 0,
-        baseURL: API,
       };
     },
     methods: {
@@ -93,6 +92,9 @@
       getSex (sex) {
         sex = Number(sex);
         return sexes[sex];
+      },
+      getDownloadURL () {
+        return (API + '/customer/export').replace(/\/{2,}/g, '/');
       },
       turnToPage (page) {
         this.filter.page = page;
