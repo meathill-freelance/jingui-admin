@@ -12,6 +12,7 @@ import feedback from 'src/module/feedback/router';
 import customer from 'src/module/customer/router';
 import cover from 'src/module/cover/router';
 import global from 'src/module/global/router';
+import shop from 'src/module/shop/router';
 
 Vue.use(Router);
 
@@ -34,6 +35,7 @@ export default new Router({
         ...feedback,
         ...customer,
         ...global,
+        ...shop,
       ],
     },
     {

@@ -6,7 +6,7 @@
     :class="className",
     :disabled="saving",
   )
-    i.fa(
+    i.fa.mr-2(
       :class="iconClass",
       v-if="icon || saving",
     )

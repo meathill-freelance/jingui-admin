@@ -23,6 +23,23 @@
               router-link.nav-link(to="/cover/list")
                 i.icon-picture
                 | 全部微信群
+        router-link.nav-item.nav-dropdown(
+          tag="li",
+          :to="{ path: '/shop'}",
+          disabled,
+        )
+          .nav-link.nav-dropdown-toggle(@click="handleClick")
+            i.icon-picture
+            | 研值商品管理
+          ul.nav-dropdown-items
+            li.nav-item
+              router-link.nav-link(to="/shop/new")
+                i.icon-plus
+                | 新建商品
+            li.nav-item
+              router-link.nav-link(to="/shop/list")
+                i.icon-picture
+                | 全部商品
         li.nav-item
           router-link.nav-link(
             to="/feedback",

@@ -3,39 +3,39 @@ import Edit from './container/edit.vue';
 
 export default [
   {
-    path: 'season',
-    name: '学期管理',
-    redirect: 'season/list',
+    path: 'shop',
+    name: '商品管理',
+    redirect: 'shop/list',
     component: {
-      render(createElement) {
+      render (createElement) {
         return createElement('router-view');
-      }
+      },
     },
     children: [
       {
         path: 'list',
-        name: 'season.list',
+        name: 'shop.list',
         meta: {
-          label: '全部学期',
+          label: '全部商品',
         },
         component: List,
       },
       {
         path: 'new',
-        name: 'season.new',
+        name: 'shop.new',
         meta:{
-          label: '添加新学期'
+          label: '新建商品',
         },
         component: Edit,
       },
       {
         path: ':id/edit',
-        name: 'season.edit',
+        name: 'shop.edit',
         meta: {
-          label: '编辑学期',
+          label: '编辑商品',
         },
         component: Edit,
       },
-    ]
+    ],
   },
 ];

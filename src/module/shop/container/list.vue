@@ -1,56 +1,46 @@
 <template lang="pug">
   .animated.fadeIn
     nav.navbar.navbar-toggleable-md.navbar-light.bg-faded
-      <form class="form-inline mr-auto mt-2 mt-lg-0">
-        <a class="btn btn-outline-primary mr-sm-2 my-sm-0" href="#/exercise/new">
-          <i class="fa fa-plus"></i>
-          | 新增作业
-        </a>
-      </form>
-      <form class="form-inline my-lg-0" @submit.prevent="search">
-        input.form-control.mr-sm-2(type="search", name="query", placeholder="作业名称")
-        button.btn.btn-outline-success.my-2.my-sm-0 搜索
-      </form>
+      form.form-inline.mr-auto.mt-2.mt-lg-0
+        a.btn.btn-outline-primary.mr-sm-2.my-sm-0(href="#/shop/new")
+          i.fa.fa-plus
+          | 新建商品
 
     .bg-white.px-3.pt-3.pb-1
       <div class="alert alert-danger" v-if="error">
         <i class="fa fa-times"></i>
         | {{error}}
       </div>
-      table.table.table-bordered
+      table.table.table-bordered.cover-list
         thead
           tr
-            th 作业标题
-            th 作业类型
-            th 上线日期
+            th 商品名称
+            th 商品类型
+            th 商品价格
+            th 商品缩略图
             th 操作
         tbody(v-if="!isLoading")
           tr(v-for="(item, index) in list", :key="item.id")
-            td {{item.title}}
-            td {{item.type | toType}}
-            td {{item.day}}
+            td {{item.name}}
+            td {{item.type === 1 ? '精品课程' : '考研书籍'}}
+            td {{item.price}}
+            td
+              img.img-thumbnail(:src="item.thumbnail")
             td
               .btn-group(role="group")
-                a.btn.btn-outline-primary(:href="'#/exercise/' + item.id + '/edit'")
-                  i.fa.fa-edit
+                router-link.btn.btn-outline-primary(:to="{name: 'shop.edit', params: {id: item.id}}", )
+                  i.fa.fa-edit.mr-2
                   | 修改
-                button.btn.btn-info(
-                  type="button",
-                  disabled,
-                  :href="'#/exercise/' + item.id",
-                )
-                  i.fa.fa-info-circle
-                  | 详情
                 spin-button(
                   type="button",
                   icon="fa-trash",
                   buttonClass="btn-danger",
                   :saving="item.saving",
-                  @click.native="remove(item, index)",
+                  @click.native="remove(index, item)",
                 ) 删除
         tfoot(v-else)
           tr
-            td(colspan="4")
+            td(colspan=5)
               i.fa.fa-spin.fa-spinner.fa-2x
 
       pagination(:total="total", :per-page="20", @change="turnToPage")
@@ -58,18 +48,17 @@
 
 <script>
   import axios from 'axios';
+
   import pagination from 'src/components/Pagination.vue';
   import SpinButton from 'src/components/form/SpinButton.vue';
-  import baseMixin from 'src/mixin/base';
-  import exerciseMixin from 'src/mixin/exercise';
+  import base from 'src/mixin/base';
 
   export default {
     components: {
       pagination,
       SpinButton,
     },
-    mixins: [baseMixin, exerciseMixin
-    ],
+    mixins: [base],
     data() {
       return {
         isLoading: true,
@@ -77,8 +66,8 @@
         filter: {},
         list: [],
         allCategory: [],
-        total: 0
-      }
+        total: 0,
+      };
     },
     methods: {
       changeCategory(event) {
@@ -86,12 +75,9 @@
         this.fetch();
       },
       fetch() {
-        return axios.get('exercise', {params: this.filter})
+        return axios.get('product', {params: this.filter})
           .then(response => {
-            this.list = response.list.map(item => {
-              item.saving = false;
-              return item;
-            });
+            this.list = response.data;
             this.total = response.total;
             this.isLoading = false;
           });
@@ -104,12 +90,12 @@
         this.filter.page = page;
         this.fetch();
       },
-      remove(item, index) {
-        if (!confirm('您确定要删除这个作业么？')) {
+      remove(index, item) {
+        if (!confirm('您确定要删除这个商品么')) {
           return;
         }
         item.saving = true;
-        axios.delete('exercise/' + item.id)
+        axios.delete('product/' + item.id)
           .then(response => {
             if (response.code !== 0) {
               throw new Error(response.msg);
@@ -130,3 +116,8 @@
     },
   }
 </script>
+
+<style lang="stylus">
+  .cover-list .img-thumbnail
+    max-width 200px
+</style>
