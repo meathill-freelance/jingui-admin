@@ -35,6 +35,16 @@
           option(value="1") 精品课程
           option(value="2") 考研书籍
     .form-group.row
+      label.col-sm-2.form-control-label(for="link") 商品链接
+      .col-sm-6
+        input#link.form-control(
+          name="link",
+          placeholder="如果是小程序则填写小程序 appId",
+          v-model="formData.link",
+          required,
+        )
+        small.form-text.text-muted 小程序必须关联到同一公众号下
+    .form-group.row
       label.col-md-2.form-control-label(for="thumbnail") 商品缩略图
       .col-md-6
         uploader#thumbnail.form-group(
@@ -88,6 +98,7 @@ export default {
         type: '',
         thumbnail: '',
         price: null,
+        link: '',
       },
 
       API: API,

@@ -17,6 +17,7 @@
             th 商品名称
             th 商品类型
             th 商品价格
+            th 商品链接
             th 商品缩略图
             th 操作
         tbody(v-if="!isLoading")
@@ -24,6 +25,7 @@
             td {{item.name}}
             td {{item.type === 1 ? '精品课程' : '考研书籍'}}
             td {{item.price}}
+            td {{item.link}}
             td
               img.img-thumbnail(:src="item.thumbnail")
             td
