@@ -29,6 +29,7 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 10000,
+          esmodule: false,
           name: 'assets/[name].[hash].[ext]'
         },
       },
