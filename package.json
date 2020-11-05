@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
-    "animate.css": "^3.7.2",
-    "axios": "^0.19.2",
+    "animate.css": "^4.1.1",
+    "axios": "^0.21.0",
     "bootstrap": "^4.5.0",
     "chart.js": "^2.9.3",
     "lodash": "^4.17.19",
@@ -31,11 +31,11 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
-    "css-loader": "^3.5.3",
+    "css-loader": "^5.0.1",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "pug": "^3.0.0",
-    "style-loader": "^1.2.1",
+    "style-loader": "^2.0.0",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "url-loader": "^4.1.0",
